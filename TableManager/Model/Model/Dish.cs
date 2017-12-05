@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
+namespace TableManageData
 {
-    class Dish
+    public class Dish
     {
         public int Id { get; set; }
         public decimal Price { get; set; }
+        public decimal Cost { get; set; }
         public string Name { get; set; }
+        public ICollection<DishInOrder> RelatedOrders { get; set; }
     }
 }

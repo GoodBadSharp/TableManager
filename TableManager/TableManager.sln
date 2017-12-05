@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TableManager", "TableManager\TableManager.csproj", "{5C12C942-E66E-4193-9D72-F564809BB343}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{DED18D9A-9CA5-431F-861C-9D5700520938}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TableManagerData", "Model\TableManagerData.csproj", "{DED18D9A-9CA5-431F-861C-9D5700520938}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

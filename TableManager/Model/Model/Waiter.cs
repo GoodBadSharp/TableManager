@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
+namespace TableManageData
 {
-    class Waiter
+    public class Waiter
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<Order> CurrentOrders { get; set; }
+        public ICollection<Order> CurrentOrders { get; set; }
     }
 }
