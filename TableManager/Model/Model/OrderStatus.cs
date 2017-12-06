@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TableManageData;
 
-namespace TableManageData
+namespace TableManagerData.Model
 {
-    public class Waiter
+    public class OrderStatus
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string Description { get; set; } //Active, Complete
 
         public ICollection<Order> Orders { get; set; }
     }
