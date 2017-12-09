@@ -39,7 +39,7 @@ namespace TableManagerData
             {
                 var statuses = _context.TableStatuses.AsEnumerable();
                 var valueProperty = typeof(TableStatus).GetProperties()[0].ToString();
-                var displayProperty = typeof(TableStatus).GetProperties()[0].ToString();
+                var displayProperty = typeof(TableStatus).GetProperties()[1].ToString();
                 TableStatusHandler?.Invoke(statuses, valueProperty, displayProperty);
                 _context.Tables.ToList().ForEach(t => TableInfoHandler?.Invoke(t.NumberOfSeats, t.Location));
             }
