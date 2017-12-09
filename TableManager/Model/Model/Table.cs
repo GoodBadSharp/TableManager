@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,10 +16,11 @@ namespace TableManageData
         [JsonProperty("Number_of_seats")]
         public int NumberOfSeats { get; set; }
 
+        [Index("Location_Index", IsUnique = true)]
         public string Location { get; set; }
 
         public TableStatus Status { get; set; }
 
-        public ICollection<Order> RekatedOrders { get; set; }
+        public ICollection<Order> RelatedOrders { get; set; }
     }
 }

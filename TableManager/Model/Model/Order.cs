@@ -14,7 +14,6 @@ namespace TableManageData
     {
         public int Id { get; set; }
 
-        [JsonProperty("Time")]
         public DateTime OrderTime { get; set; }
 
         public OrderStatus Status { get; set; }

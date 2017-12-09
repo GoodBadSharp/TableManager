@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TableManageData;
+using TableManagerData;
 
 namespace TableManager
 {
@@ -21,6 +21,8 @@ namespace TableManager
     /// </summary>
     public partial class MainWindow : Window
     {
+        UnitOfWork _unitOfWork = new UnitOfWork();
+
         public MainWindow()
         {
             InitializeComponent();

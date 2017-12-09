@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace TableManagerData
 {
-    class UnitOfWork: IDisposable
+    public class UnitOfWork
     {
         Context _context = new Context();
-        public OrdersRepository Orders { get; }
-        public TablesRepository Tables { get; }
+        public IOrdersRepository Orders { get; }
+        public ITablesRepository Tables { get; }
 
         public UnitOfWork()
         {
@@ -18,14 +18,9 @@ namespace TableManagerData
             Tables = new TablesRepository(_context);
         }
 
-        public void Save()
+        public void SaveChanges()
         {
             _context.SaveChanges();
-        }
-
-        public void Dispose()
-        {
-            _context.Dispose();
         }
     }
 }
