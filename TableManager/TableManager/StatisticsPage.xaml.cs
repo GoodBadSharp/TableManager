@@ -12,21 +12,22 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using TableManagerData;
 
 namespace TableManager
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для StatisticsPage.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class StatisticsPage : Page
     {
-        UnitOfWork _unitOfWork = new UnitOfWork();
-
-        public MainWindow()
+        public StatisticsPage()
         {
             InitializeComponent();
-            frameMain.Navigate(new TablesPage());
+        }
+
+        private void buttonBack_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new TablesPage());
         }
     }
 }
