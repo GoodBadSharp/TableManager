@@ -56,5 +56,10 @@ namespace TableManagerData
             }
             catch { throw new InvalidOperationException("Failed to complete the order"); }
         }
+
+        public void GetDishInfo()
+        {
+
+        }
     }
 }

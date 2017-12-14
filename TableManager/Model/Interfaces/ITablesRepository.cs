@@ -19,7 +19,7 @@ namespace TableManagerData
         /// Invoked in GetTableInfo(). 
         /// Assign to get collection of table statuses, SelectedValuePath (status id), and DisplayMemberPath (status descripion)
         /// </summary>
-        event Action<IEnumerable<TableStatus>, string, string> TableStatusHandler;
+        event Action<IEnumerable<TableStatus>, int, string> TableStatusHandler;
 
         /// <summary>
         /// Use to get change table status

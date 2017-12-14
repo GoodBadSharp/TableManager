@@ -9,7 +9,7 @@ namespace TableManagerData
     internal class TablesRepository : ITablesRepository
     {
         public event Action<int, string> TableInfoHandler;
-        public event Action<IEnumerable<TableStatus>, string, string> TableStatusHandler;
+        public event Action<IEnumerable<TableStatus>, int, string> TableStatusHandler;
 
         private Context _context;
 
@@ -38,8 +38,8 @@ namespace TableManagerData
             try
             {
                 var statuses = _context.TableStatuses.AsEnumerable();
-                var valueProperty = typeof(TableStatus).GetProperties()[0].ToString();
-                var displayProperty = typeof(TableStatus).GetProperties()[1].ToString();
+                int valueProperty = int.Parse(typeof(TableStatus).GetProperties()[0].ToString());
+                string displayProperty = typeof(TableStatus).GetProperties()[1].ToString();
                 TableStatusHandler?.Invoke(statuses, valueProperty, displayProperty);
                 _context.Tables.ToList().ForEach(t => TableInfoHandler?.Invoke(t.NumberOfSeats, t.Location));
             }
