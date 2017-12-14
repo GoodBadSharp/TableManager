@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TableManageData;
 
 namespace TableManager
 {
@@ -23,6 +24,21 @@ namespace TableManager
         public TablesPage()
         {
             InitializeComponent();
+            List<Order> orders = new List<Order>
+            {
+                new Order { Id = 1, OrderTime = new DateTime(2012, 12, 12), OrderedDishes = new List<DishInOrder> {
+                        new DishInOrder { DishID = 100, Dish = new Dish{ Name = "lol"} },
+                        new DishInOrder { DishID = 101, Dish = new Dish{ Name = "kek"}  } } },
+                new Order { Id = 2, OrderTime = new DateTime(2013, 12, 12), OrderedDishes = new List<DishInOrder> {
+                        new DishInOrder { DishID = 200, Dish = new Dish{ Name = "lol"} },
+                        new DishInOrder { DishID = 201, Dish = new Dish{ Name = "kek"} } } }
+            };
+            
+            UpdateOrdersList(orders);
+            //if(treeViewOrders.SelectedItem?.GetType() == typeof(int))
+            //{
+            //    MessageBox.Show("ok");
+            //}
         }
 
         private void buttonStatistics_Click(object sender, RoutedEventArgs e)
@@ -51,6 +67,11 @@ namespace TableManager
         private void buttonDeleteOrder_Click(object sender, RoutedEventArgs e)
         {
             //actions taking place when order is cancelled
+        }
+
+        private void UpdateOrdersList(List<Order> orders)
+        {
+            treeViewOrders.ItemsSource = orders;
         }
     }
 }
