@@ -31,7 +31,10 @@ namespace TableManagerData
                 if (table.RelatedOrders.FirstOrDefault(o => o.Status.Id == 1) != null)
                     throw new InvalidOperationException("There are active orders at the table right now. Can't change status");
                 else
+                {
                     table.Status = _context.TableStatuses.Single(ts => ts.Id == statusId);
+                    _context.SaveChanges();
+                }
             }
             catch
             { throw new InvalidOperationException("Failed to change status"); }
@@ -46,7 +49,9 @@ namespace TableManagerData
                 //string valueProperty = typeof(TableStatus).GetProperties()[0].ToString();
                 //string displayProperty = typeof(TableStatus).GetProperties()[1].ToString();
                 TableStatusHandler?.Invoke(statuses, "Id", "Description");
-                _context.Tables.ToList().ForEach(t => TableInfoHandler?.Invoke(t.Id, t.NumberOfSeats, t.X, t.Y));
+                _context.Tables.ToList().ForEach(t => TableInfoHandler?.
+                    Invoke(t.Id, t.NumberOfSeats, t.X, t.Y));
+                _context.SaveChanges();
             }
             catch { throw new InvalidOperationException("Failed to retrieve table info"); }
         }
