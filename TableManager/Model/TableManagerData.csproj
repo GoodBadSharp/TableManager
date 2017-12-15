@@ -54,6 +54,15 @@
     <Compile Include="Interfaces\IOrdersRepository.cs" />
     <Compile Include="Interfaces\IQueries.cs" />
     <Compile Include="Interfaces\ITablesRepository.cs" />
+    <Compile Include="Migrations\201712151158391_Initial.cs" />
+    <Compile Include="Migrations\201712151158391_Initial.Designer.cs">
+      <DependentUpon>201712151158391_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712151244090_TableCoordUpdate.cs" />
+    <Compile Include="Migrations\201712151244090_TableCoordUpdate.Designer.cs">
+      <DependentUpon>201712151244090_TableCoordUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Dish.cs" />
     <Compile Include="Model\DishInOrder.cs" />
     <Compile Include="Model\Order.cs" />
@@ -71,6 +80,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EmbeddedResource Include="Migrations\201712151158391_Initial.resx">
+      <DependentUpon>201712151158391_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712151244090_TableCoordUpdate.resx">
+      <DependentUpon>201712151244090_TableCoordUpdate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Model\SeedData\TableStatus.json" />
     <EmbeddedResource Include="Model\SeedData\OrderStatus.json" />
     <None Include="packages.config" />

@@ -16,14 +16,14 @@ namespace TableManageData
 
         public DateTime OrderTime { get; set; }
 
-        [ForeignKey("OrderStatus")]
-        public int StatusID { get; set; }
+        //[ForeignKey("OrderStatus")]
+        //public int StatusID { get; set; }
 
-        [ForeignKey("Table")]
-        public int TableID { get; set; }
+        //[ForeignKey("Table")]
+        //public int TableID { get; set; }
 
-        [ForeignKey("Waiter")]
-        public int WaiterID { get; set; }
+        //[ForeignKey("Waiter")]
+        //public int WaiterID { get; set; }
 
         public OrderStatus Status { get; set; }
 

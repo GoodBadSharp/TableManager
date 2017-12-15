@@ -11,13 +11,13 @@ namespace TableManagerData
     {
         /// <summary>
         /// Invoked for each table instance in GetTableInfo().
-        /// Assign to get id and location for each table
+        /// Assign to get id, number of seats, X and Y coordinates of a table (order dependent)
         /// </summary>
-        event Action<int, string> TableInfoHandler;
+        event Action<int, int, int, int> TableInfoHandler;
 
         /// <summary>
         /// Invoked in GetTableInfo(). 
-        /// Assign to get collection of table statuses, SelectedValuePath (status id), and DisplayMemberPath (status descripion)
+        /// Assign to get collection of table statuses, SelectedValuePath (status id), and DisplayMemberPath (status descripion) 
         /// </summary>
         event Action<IEnumerable<TableStatus>, string, string> TableStatusHandler;
 

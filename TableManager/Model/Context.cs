@@ -25,33 +25,8 @@ namespace TableManagerData
 
         public DbSet<OrderStatus> OrderStatuses { get; set; }
 
-        //public Context() : base("DB") {
+        public Context() : base("localsql") {
 
-        //}
-
-        //Move the to Configuration method
-        //private void GetDataFromJson<T>(string resourceName, Assembly assembly, DataContext context, Expression<Func<T, object>> KeyIdentifier) where T : class
-        //{
-        //    try
-        //    {
-        //        using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-        //        {
-        //            using (StreamReader reader = new StreamReader(stream, System.Text.Encoding.UTF8))
-        //            {
-        //                var dataArray = JsonConvert.DeserializeObject<T[]>(reader.ReadToEnd());
-        //                context.Set<T>().AddOrUpdate(KeyIdentifier, dataArray);
-        //            }
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        if (typeof(T) == typeof(Table))
-        //            throw new InvalidOperationException("Failed to load table repository. Check if location property is unique");
-        //        else
-        //            throw new InvalidOperationException($"Failed to load {typeof(T).ToString()} repository");
-        //    }
-        //}
+        }
     }
-
-
 }

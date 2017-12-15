@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -15,11 +16,9 @@ namespace TableManageData
 
         public int NumberOfSeats { get; set; }
 
-        [Index("Location_Index", IsUnique = true)]
-        public string Location { get; set; }
+        public int X { get; set; }
 
-        [ForeignKey("TableStatus")]
-        public int StatusID { get; set; }
+        public int Y { get; set; }
 
         public TableStatus Status { get; set; }
 
