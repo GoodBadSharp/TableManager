@@ -30,6 +30,7 @@ namespace TableManager
         public AddOrderPage()
         {
             InitializeComponent();
+            //comboBoxProducts.ItemsSource = availableDishes;
         }
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
@@ -46,7 +47,7 @@ namespace TableManager
 
         private void buttonAddDish_Click(object sender, RoutedEventArgs e)
         {
-        //   comboBoxProducts.ItemsSource = availableDishes;
+        //   
         //    comboBoxProducts.DisplayMemberPath = "Name";
         //    comboBoxProducts.SelectedValuePath = "Id";
         //    if (comboBoxProducts.SelectedIndex >= 0 || textBoxProductQuantity.Text != null||int.TryParse(textBoxProductQuantity.Text,out int j)||j>0)

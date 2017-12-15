@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TableManageData;
+using TableManagerData;
 
 namespace TableManager
 {
@@ -33,12 +34,14 @@ namespace TableManager
             //            new DishInOrder { DishID = 200, Dish = new Dish{ Name = "lol"} },
             //            new DishInOrder { DishID = 201, Dish = new Dish{ Name = "kek"} } } }
             //};
-            
+
             //UpdateOrdersList(orders);
             ////if(treeViewOrders.SelectedItem?.GetType() == typeof(int))
             ////{
             ////    MessageBox.Show("ok");
             ////}
+            UnitOfWork.Instance.Tables.TableInfoHandler += CreateTablesGrid;
+            //UnitOfWork.Instance.Tables.GetTableInfo();
         }
 
         private void buttonStatistics_Click(object sender, RoutedEventArgs e)
@@ -71,7 +74,35 @@ namespace TableManager
 
         private void UpdateOrdersList(List<Order> orders)
         {
-            treeViewOrders.ItemsSource = orders;
+            //treeViewOrders.ItemsSource = orders;
+        }
+        public void CreateTablesGrid(int id, int numbetOfSeats, int x, int y)
+        {
+            #region UIModification
+            Button table = new Button();
+            if (x > DynamicGrid.ColumnDefinitions.Count)
+            { 
+                for (int i = DynamicGrid.ColumnDefinitions.Count; i <= x; i++)
+                {
+                    DynamicGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                }                
+            }
+            Grid.SetColumn(table, x);
+
+            if (y > DynamicGrid.RowDefinitions.Count)
+            {
+                for (int i = DynamicGrid.RowDefinitions.Count; i <= y; i++)
+                {
+                    DynamicGrid.RowDefinitions.Add(new RowDefinition());
+                }
+            }
+            Grid.SetRow(table, y);
+
+            table.Tag = id;
+            TextBlock info = new TextBlock();
+            info.Text = $"{id}\nNumber of seats: {numbetOfSeats}";
+            table.Content = info;
+            #endregion
         }
     }
 }
