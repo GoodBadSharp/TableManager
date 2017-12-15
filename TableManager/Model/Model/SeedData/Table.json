@@ -1,0 +1,30 @@
+[
+  {
+    "Id": 1,
+    "NumberOfSeats": 2,
+    "Status_Id": 1,
+    "X": 0,
+    "Y": 0
+  },
+  {
+    "Id": 2,
+    "NumberOfSeats": 3,
+    "Status_Id": 1,
+    "X": 2,
+    "Y": 0
+  },
+  {
+    "Id": 3,
+    "NumberOfSeats": 3,
+    "Status_Id": 1,
+    "X": 0,
+    "Y": 1
+  },
+  {
+    "Id": 4,
+    "NumberOfSeats": 4,
+    "Status_Id": 1,
+    "X": 2,
+    "Y": 1
+  }
+]

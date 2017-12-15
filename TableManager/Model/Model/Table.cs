@@ -20,6 +20,9 @@ namespace TableManageData
 
         public int Y { get; set; }
 
+        [ForeignKey("Status"), Required]
+        public int Status_Id { get; set; }
+
         public TableStatus Status { get; set; }
 
         public ICollection<Order> RelatedOrders { get; set; }

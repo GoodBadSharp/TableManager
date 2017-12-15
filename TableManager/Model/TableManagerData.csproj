@@ -62,6 +62,10 @@
     <Compile Include="Migrations\201712151244090_TableCoordUpdate.Designer.cs">
       <DependentUpon>201712151244090_TableCoordUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712151629555_FKUpdate.cs" />
+    <Compile Include="Migrations\201712151629555_FKUpdate.Designer.cs">
+      <DependentUpon>201712151629555_FKUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Dish.cs" />
     <Compile Include="Model\DishInOrder.cs" />
@@ -86,9 +90,18 @@
     <EmbeddedResource Include="Migrations\201712151244090_TableCoordUpdate.resx">
       <DependentUpon>201712151244090_TableCoordUpdate.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712151629555_FKUpdate.resx">
+      <DependentUpon>201712151629555_FKUpdate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Model\SeedData\TableStatus.json" />
     <EmbeddedResource Include="Model\SeedData\OrderStatus.json" />
+    <EmbeddedResource Include="Model\SeedData\Dish.json" />
+    <EmbeddedResource Include="Model\SeedData\Table.json" />
+    <EmbeddedResource Include="Model\SeedData\DishInOrder.json" />
+    <EmbeddedResource Include="Model\SeedData\Order.json" />
+    <EmbeddedResource Include="Model\SeedData\Waiter.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions />
 </Project>

@@ -1,0 +1,63 @@
+[
+
+  {
+    "id": 1,
+    "Price": 290,
+    "Cost": 90,
+    "Name": "Shrimp Ceasar Salad"
+  },
+  {
+    "id": 2,
+    "Price": 260,
+    "Cost": 70,
+    "Name": "Chicken Ceasar Salad"
+  },
+  {
+    "id": 3,
+    "Price": 170,
+    "Cost": 50,
+    "Name": "Minestrone soup"
+  },
+  {
+    "id": 4,
+    "Price": 210,
+    "Cost": 65,
+    "Name": "Pumpkin cream soup"
+  },
+  {
+    "id": 5,
+    "Price": 380,
+    "Cost": 190,
+    "Name": "Seafood Risotto"
+  },
+  {
+    "id": 6,
+    "Price": 350,
+    "Cost": 140,
+    "Name": "Grilled Chicken with vegetables"
+  },
+  {
+    "id": 7,
+    "Price": 190,
+    "Cost": 70,
+    "Name": "Brownie"
+  },
+  {
+    "id": 8,
+    "Price": 230,
+    "Cost": 100,
+    "Name": "Tiramisu"
+  },
+  {
+    "id": 9,
+    "Price": 240,
+    "Cost": 120,
+    "Name": "Guakamole with Nachos"
+  },
+  {
+    "id": 10,
+    "Price": 220,
+    "Cost": 100,
+    "Name": "Hummus with Pita"
+  }
+]

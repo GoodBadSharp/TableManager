@@ -25,8 +25,6 @@ namespace TableManagerData
 
         public DbSet<OrderStatus> OrderStatuses { get; set; }
 
-        public Context() : base("localsql") {
-
-        }
+        public Context() : base("localsql") { }
     }
 }
