@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,25 +23,15 @@ namespace TableManager
     /// </summary>
     public partial class TablesPage : Page
     {
+        public Action<int> CompleteOrder;
+
         public TablesPage()
         {
             InitializeComponent();
-            //List<Order> orders = new List<Order>
-            //{
-            //    new Order { Id = 1, OrderTime = new DateTime(2012, 12, 12), OrderedDishes = new List<DishInOrder> {
-            //            new DishInOrder { DishID = 100, Dish = new Dish{ Name = "lol"} },
-            //            new DishInOrder { DishID = 101, Dish = new Dish{ Name = "kek"}  } } },
-            //    new Order { Id = 2, OrderTime = new DateTime(2013, 12, 12), OrderedDishes = new List<DishInOrder> {
-            //            new DishInOrder { DishID = 200, Dish = new Dish{ Name = "lol"} },
-            //            new DishInOrder { DishID = 201, Dish = new Dish{ Name = "kek"} } } }
-            //};
-
-            //UpdateOrdersList(orders);
-            ////if(treeViewOrders.SelectedItem?.GetType() == typeof(int))
-            ////{
-            ////    MessageBox.Show("ok");
-            ////}
+            ObservableCollection<Order> orders = new ObservableCollection<Order>();
             UnitOfWork.Instance.Tables.TableInfoHandler += CreateTablesGrid;
+            CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
+            CompleteOrder += TableSelectionChanged;
             //UnitOfWork.Instance.Tables.GetTableInfo();
         }
 
@@ -64,6 +55,12 @@ namespace TableManager
 
         private void buttonCompleteOrder_Click(object sender, RoutedEventArgs e)
         {
+            if (treeViewOrders.SelectedItem is Order)
+            {
+                var item = treeViewOrders.SelectedItem as Order;
+                CompleteOrder?.Invoke(item.Id);
+            }
+                
             //actions taking place when order is completed (guests got all dishes and payed)
         }
 
@@ -72,7 +69,7 @@ namespace TableManager
             //actions taking place when order is cancelled
         }
 
-        private void UpdateOrdersList(List<Order> orders)
+        private void RefreshOrdersList(List<Order> orders)
         {
             //treeViewOrders.ItemsSource = orders;
         }
@@ -103,6 +100,18 @@ namespace TableManager
             info.Text = $"{id}\nNumber of seats: {numbetOfSeats}";
             table.Content = info;
             #endregion
+            table.Click += buttonTable_Click;           
+        }
+        private void buttonTable_Click(object sender, RoutedEventArgs e)
+        {
+            var item = sender as Order;
+            TableSelectionChanged(item.Id);
+        }
+
+        private void TableSelectionChanged(int id)
+        {
+            treeViewOrders.ItemsSource = UnitOfWork.Instance.Orders.
+                GetActiveOrders(id);
         }
     }
 }
