@@ -11,9 +11,10 @@ namespace TableManagerData
 {
     public class Queries : IQueries
     {
+        public event Action<IEnumerable<string>, IEnumerable<string>> UpdateTableHeadersHandler;
         public event Action<IEnumerable<QueryContainer>, string, string> QueryCollectionHandler;
-        public event Func<DateTime> GetSpecifiedFromDateCallback;
-        public event Func<DateTime> GetSpecifiedTillDateCallback;
+        public event Func<DateTime?> GetSpecifiedFromDateCallback;
+        public event Func<DateTime?> GetSpecifiedTillDateCallback;
         public event Action<IEnumerable<QueryResult>> QueryResultHandler;
 
         Context _context;
@@ -27,22 +28,24 @@ namespace TableManagerData
         {
             try
             {
+                //see QueryResults for correct bindings (second collection)
+                UpdateTableHeadersHandler?.Invoke(new List<string> { "Name", "Number of Order", "Profit" }, new List<string> { "Name", "NumberOfOrders", "Profit" });
                 switch (queryID)
                 {
                     case 1:
                         //UpdateColumnsHandler?.Invoke(new List<string> { "ID", "Terminal's Location", "Products out of stock" }, new List<string> { "TerminalID", "Location", "ReportDetails" });
-                        TableStats();
+                        //TableStats();
                         break;
                     case 2:
                         //UpdateColumnsHandler?.Invoke(new List<string> { "ID", "Product Name", "Sold" }, new List<string> { "ProductID", "Name", "ReportDetails" });
-                        StaffStats();
+                        //StaffStats();
                         break;
                     default:
                         throw new NotImplementedException("Query not implemented");
                 }
             }
             catch
-            { throw new NotImplementedException("Failed to conduct query"); }
+            { throw new InvalidOperationException("Failed to conduct query"); }
         }
 
         public void GetQueryInfo()
@@ -60,10 +63,14 @@ namespace TableManagerData
 
             try
             {
-                fromDate = GetSpecifiedFromDateCallback.Invoke();
-                tillDate = GetSpecifiedTillDateCallback.Invoke();
+                fromDate = GetSpecifiedFromDateCallback?.Invoke() != null ? 
+                    (DateTime)GetSpecifiedFromDateCallback.Invoke() 
+                    : _context.Orders.Min(o => o.OrderTime);
+                tillDate = GetSpecifiedTillDateCallback?.Invoke() != null ? 
+                    (DateTime)GetSpecifiedTillDateCallback.Invoke() 
+                    : _context.Orders.Max(o => o.OrderTime);
             }
-            catch { throw new InvalidOperationException("Specify time period"); }
+            catch { throw new InvalidOperationException("Failed to get specified time period"); }
 
             var result = _context.Tables
                 .Select(t => new QueryResult
@@ -94,10 +101,14 @@ namespace TableManagerData
 
             try
             {
-                fromDate = GetSpecifiedFromDateCallback.Invoke();
-                tillDate = GetSpecifiedTillDateCallback.Invoke();
+                fromDate = GetSpecifiedFromDateCallback?.Invoke() != null ?
+                    (DateTime)GetSpecifiedFromDateCallback.Invoke()
+                    : _context.Orders.Min(o => o.OrderTime);
+                tillDate = GetSpecifiedTillDateCallback?.Invoke() != null ?
+                    (DateTime)GetSpecifiedTillDateCallback.Invoke()
+                    : _context.Orders.Max(o => o.OrderTime);
             }
-            catch { throw new InvalidOperationException("Specify time period"); }
+            catch { throw new InvalidOperationException("Failed to get specified time period"); }
 
             var result = _context.Waiters
                 .Select(w => new QueryResult

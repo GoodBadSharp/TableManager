@@ -21,12 +21,15 @@ namespace TableManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        UnitOfWork _unitOfWork = new UnitOfWork();
 
         public MainWindow()
         {
             InitializeComponent();
-            frameMain.Navigate(new TablesPage());
+        }
+
+        private void frameMain_Loaded(object sender, RoutedEventArgs e)
+        {
+            frameMain.Navigate(PageContainer.TablesPage);
         }
     }
 }

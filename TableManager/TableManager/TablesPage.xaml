@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:TableManager"
       xmlns:self="clr-namespace:TableManageData;assembly=TableManagerData"
       mc:Ignorable="d" d:DesignWidth="525"
-      Title="TablesPage" d:DesignHeight="350">
+      Title="TablesPage" d:DesignHeight="350" KeepAlive="True">
 
     <Grid>
         <Grid.ColumnDefinitions>

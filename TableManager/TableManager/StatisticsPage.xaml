@@ -23,8 +23,8 @@
         </Grid.ColumnDefinitions>
         <ComboBox Margin="5" VerticalAlignment="Top" Grid.ColumnSpan="3" Name="comboBoxStatisticsType"
                   Grid.Column="1" Grid.Row="0"/>
-        <DatePicker Name="datePickerFrom" Margin="5" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1"/>
-        <DatePicker Name="datePickerTill" Margin="5" VerticalAlignment="Top" Grid.Column="3" Grid.Row="1"/>
+        <DatePicker x:Name="fromDatePicker" Margin="5" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1"/>
+        <DatePicker x:Name="tillDatePicker" Margin="5" VerticalAlignment="Top" Grid.Column="3" Grid.Row="1"/>
         <TextBlock HorizontalAlignment="Left" Margin="5,5,0,0" 
                    TextWrapping="Wrap" Text="Choose type of statistics" 
                    VerticalAlignment="Top" Grid.Column="0" Grid.Row="0"/>
@@ -32,8 +32,9 @@
             TextWrapping="Wrap" Text="Show statistics from" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1"/>
         <TextBlock HorizontalAlignment="Left" Margin="5" 
             TextWrapping="Wrap" Text="till" VerticalAlignment="Top" Grid.Column="2" Grid.Row="1"/>
-        <ListBox Name="listBoxStatistics" Margin="5" Grid.Row="2"  Grid.ColumnSpan="4"/>
+        <ListView x:Name="statsListView" Margin="5" Grid.Row="2"  Grid.ColumnSpan="4"/>
         <Button Name="buttonBack" Content="Back to tables" Margin="5,5,5,10" Grid.Row="3" Click="buttonBack_Click"/>
+        <Button x:Name="buttonQuery" Content="Get statistics" Margin="57,5,5,10" Grid.Row="3" Grid.Column="3" Click="buttonQuery_Click"/>
 
     </Grid>
 </Page>

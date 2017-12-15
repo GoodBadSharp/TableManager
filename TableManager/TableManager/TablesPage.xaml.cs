@@ -24,39 +24,39 @@ namespace TableManager
         public TablesPage()
         {
             InitializeComponent();
-            List<Order> orders = new List<Order>
-            {
-                new Order { Id = 1, OrderTime = new DateTime(2012, 12, 12), OrderedDishes = new List<DishInOrder> {
-                        new DishInOrder { DishID = 100, Dish = new Dish{ Name = "lol"} },
-                        new DishInOrder { DishID = 101, Dish = new Dish{ Name = "kek"}  } } },
-                new Order { Id = 2, OrderTime = new DateTime(2013, 12, 12), OrderedDishes = new List<DishInOrder> {
-                        new DishInOrder { DishID = 200, Dish = new Dish{ Name = "lol"} },
-                        new DishInOrder { DishID = 201, Dish = new Dish{ Name = "kek"} } } }
-            };
-            
-            UpdateOrdersList(orders);
-            //if(treeViewOrders.SelectedItem?.GetType() == typeof(int))
+            //List<Order> orders = new List<Order>
             //{
-            //    MessageBox.Show("ok");
-            //}
+            //    new Order { Id = 1, OrderTime = new DateTime(2012, 12, 12), OrderedDishes = new List<DishInOrder> {
+            //            new DishInOrder { DishID = 100, Dish = new Dish{ Name = "lol"} },
+            //            new DishInOrder { DishID = 101, Dish = new Dish{ Name = "kek"}  } } },
+            //    new Order { Id = 2, OrderTime = new DateTime(2013, 12, 12), OrderedDishes = new List<DishInOrder> {
+            //            new DishInOrder { DishID = 200, Dish = new Dish{ Name = "lol"} },
+            //            new DishInOrder { DishID = 201, Dish = new Dish{ Name = "kek"} } } }
+            //};
+            
+            //UpdateOrdersList(orders);
+            ////if(treeViewOrders.SelectedItem?.GetType() == typeof(int))
+            ////{
+            ////    MessageBox.Show("ok");
+            ////}
         }
 
         private void buttonStatistics_Click(object sender, RoutedEventArgs e)
         {
             //go to statistics page
-            NavigationService.Navigate(new StatisticsPage());
+            NavigationService.Navigate(PageContainer.StatsPage);
         }
 
         private void buttonAddOrder_Click(object sender, RoutedEventArgs e)
         {
             //adding order
-            NavigationService.Navigate(new AddOrderPage());
+            NavigationService.Navigate(PageContainer.AddOrderPage);
         }
 
         private void buttonEditOrder_Click(object sender, RoutedEventArgs e)
         {
             //editing order
-            NavigationService.Navigate(new EditOrderPage());
+            NavigationService.Navigate(PageContainer.EditOrderPage);
         }
 
         private void buttonCompleteOrder_Click(object sender, RoutedEventArgs e)

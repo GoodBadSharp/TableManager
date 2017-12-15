@@ -60,6 +60,7 @@
     <Compile Include="EditOrderPage.xaml.cs">
       <DependentUpon>EditOrderPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PageContainer.cs" />
     <Compile Include="StatisticsPage.xaml.cs">
       <DependentUpon>StatisticsPage.xaml</DependentUpon>
     </Compile>

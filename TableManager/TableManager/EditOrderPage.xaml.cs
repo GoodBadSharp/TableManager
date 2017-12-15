@@ -33,7 +33,7 @@ namespace TableManager
         private void buttonCompleteOrder_Click(object sender, RoutedEventArgs e)
         {
             //save all changes and go back to the main page
-            NavigationService.Navigate(new TablesPage());
+            NavigationService.Navigate(PageContainer.TablesPage);
         }
 
         private void buttonDeleteDish_Click(object sender, RoutedEventArgs e)
@@ -44,7 +44,7 @@ namespace TableManager
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             //navigates back to the main page
-            NavigationService.Navigate(new TablesPage());
+            NavigationService.Navigate(PageContainer.TablesPage);
         }
     }
 }

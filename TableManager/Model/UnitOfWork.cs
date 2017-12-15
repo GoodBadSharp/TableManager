@@ -23,9 +23,10 @@ namespace TableManagerData
 
         public UnitOfWork()
         {
+            _context = new Context();
             Orders = new OrdersRepository(_context);
             Tables = new TablesRepository(_context);
-            _context = new Context();
+            Queries = new Queries(_context);
         }
 
         public void SaveChanges()
