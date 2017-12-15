@@ -11,7 +11,7 @@ namespace TableManagerData.Model
     {
         public int Id { get; set; }
 
-        public string Description { get; set; } //Active, Complete
+        public string Description { get; set; }
 
         public ICollection<Order> Orders { get; set; }
     }

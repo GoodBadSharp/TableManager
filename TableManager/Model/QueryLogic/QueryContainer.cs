@@ -8,12 +8,13 @@ namespace TableManagerData.QueryLogic
 {
     public class QueryContainer
     {
-        public int ReportID { get; set; }
+        public int QueryID { get; set; }
+
         public string Description { get; set; }
 
         public QueryContainer(int id, string desc)
         {
-            ReportID = id;
+            QueryID = id;
             Description = desc;
         }
     }

@@ -13,11 +13,13 @@ namespace TableManageData
     {
         public int Id { get; set; }
 
-        [JsonProperty("Number_of_seats")]
         public int NumberOfSeats { get; set; }
 
         [Index("Location_Index", IsUnique = true)]
         public string Location { get; set; }
+
+        [ForeignKey("TableStatus")]
+        public int StatusID { get; set; }
 
         public TableStatus Status { get; set; }
 
