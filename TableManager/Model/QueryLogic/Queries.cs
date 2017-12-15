@@ -99,9 +99,26 @@ namespace TableManagerData
             }
             catch { throw new InvalidOperationException("Specify time period"); }
 
+            var result = _context.Waiters
+                .Select(w => new QueryResult
+                {
+                    Name = w.Name,
+                    NumberOfOrders = w.Orders.Where(ro => ro.OrderTime >= fromDate && ro.OrderTime <= tillDate).Count(),
+                    Profit = w.Orders
+                        .Where(o => o.OrderTime >= fromDate && o.OrderTime <= tillDate)
+                        .Select(o => new
+                        {
+                            ProfitPerOrder = o.OrderedDishes
+                                .Select(d => new
+                                {
+                                    ProfitPerDish = (d.Dish.Price - d.Dish.Cost) * d.Quantity
+                                })
+                                .Sum(a => a.ProfitPerDish)
+                        })
+                        .Sum(a => a.ProfitPerOrder)
+                });
 
-
-            //QueryResultHandler?.Invoke(result);
+            QueryResultHandler?.Invoke(result);
         }
     }
 }
