@@ -22,7 +22,9 @@ namespace TableManagerData
             try
             {
                 order.Status = _context.OrderStatuses.Single(os => os.Id == 1);
+                _context.SaveChanges();
                 _context.Orders.Add(order);
+                _context.SaveChanges();
             }
             catch
             { throw new InvalidOperationException("Failed to add the order"); }
@@ -31,7 +33,10 @@ namespace TableManagerData
         public void UpdateOrder(Order order)
         {
             if (_context.Orders.Single(o => o.Id == order.Id) != null)
+            {
                 _context.Entry(order).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
             else
                 throw new InvalidOperationException("Cannot update the order because it wasn't found in the database. Refresh application");
         }
@@ -53,13 +58,24 @@ namespace TableManagerData
             try
             {
                 _context.Orders.Single(o => o.Id == orderId).Status.Id = 2;
+                _context.SaveChanges();
             }
             catch { throw new InvalidOperationException("Failed to complete the order"); }
         }
 
+        public void CancelOrder(int orderId)
+        {
+            try
+            {
+                _context.Orders.Remove(_context.Orders.First(o => o.Id == orderId));
+                _context.SaveChanges();
+            }
+            catch { throw new InvalidOperationException("Failed to cancel the order"); }
+        }
+
         public void GetDishInfo()
         {
-
+            _context.SaveChanges();
         }
     }
 }

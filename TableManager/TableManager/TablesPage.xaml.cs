@@ -53,19 +53,24 @@ namespace TableManager
             NavigationService.Navigate(PageContainer.EditOrderPage);
         }
 
+        /// <summary>
+        /// Actions taking place when order is completed (guests got all dishes and payed).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonCompleteOrder_Click(object sender, RoutedEventArgs e)
         {
             if (treeViewOrders.SelectedItem is Order)
             {
                 var item = treeViewOrders.SelectedItem as Order;
                 CompleteOrder?.Invoke(item.Id);
-            }
-                
-            //actions taking place when order is completed (guests got all dishes and payed)
+            }               
         }
 
         private void buttonDeleteOrder_Click(object sender, RoutedEventArgs e)
         {
+
+
             //actions taking place when order is cancelled
         }
 

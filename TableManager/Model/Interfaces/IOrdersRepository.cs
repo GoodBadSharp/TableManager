@@ -39,5 +39,11 @@ namespace TableManagerData
         /// </summary>
         /// <param name="orderId">Id of the order to be completed</param>
         void OrderComplete(int orderId);
+
+        /// <summary>
+        /// Canceles an order, which was added, but not completed
+        /// </summary>
+        /// <param name="orderId"></param>
+        void CancelOrder(int orderId);
     }
 }
