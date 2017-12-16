@@ -43,17 +43,17 @@ namespace TableManagerData
 
         public void GetTableInfo()
         {
-            try
-            {
-                var statuses = _context.TableStatuses.AsEnumerable();
+            //try
+            //{
+                var statuses = _context.TableStatuses.AsNoTracking();
                 //string valueProperty = typeof(TableStatus).GetProperties()[0].ToString();
                 //string displayProperty = typeof(TableStatus).GetProperties()[1].ToString();
                 TableStatusHandler?.Invoke(statuses, "Id", "Description");
                 _context.Tables.ToList().ForEach(t => TableInfoHandler?.
                     Invoke(t.Id, t.NumberOfSeats, t.X, t.Y));
                 _context.SaveChanges();
-            }
-            catch { throw new InvalidOperationException("Failed to retrieve table info"); }
+            //}
+            //catch { throw new InvalidOperationException("Failed to retrieve table info"); }
         }
     }
 }

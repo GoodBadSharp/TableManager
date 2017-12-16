@@ -28,11 +28,11 @@ namespace TableManager
         public TablesPage()
         {
             InitializeComponent();
-            ObservableCollection<Order> orders = new ObservableCollection<Order>();
+            ObservableCollection<Order> orders;
             UnitOfWork.Instance.Tables.TableInfoHandler += CreateTablesGrid;
             CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
             CompleteOrder += TableSelectionChanged;
-            //UnitOfWork.Instance.Tables.GetTableInfo();
+            UnitOfWork.Instance.Tables.GetTableInfo();
         }
 
         private void buttonStatistics_Click(object sender, RoutedEventArgs e)

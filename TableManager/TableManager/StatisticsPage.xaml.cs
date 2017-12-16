@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +23,15 @@ namespace TableManager
     /// </summary>
     public partial class StatisticsPage : Page
     {
+        ObservableCollection<QueryResult> listViewContent;
         public StatisticsPage()
         {
             InitializeComponent();
             UnitOfWork.Instance.Queries.QueryCollectionHandler += UpdateStatsComboBox;
+            UnitOfWork.Instance.Queries.GetSpecifiedFromDateCallback += GetFromDate;
+            UnitOfWork.Instance.Queries.GetSpecifiedTillDateCallback += GetTillDate;
+            UnitOfWork.Instance.Queries.UpdateTableHeadersHandler += UpdateTableHeaders;
+            UnitOfWork.Instance.Queries.QueryResultHandler += FillTable;
 
             UnitOfWork.Instance.Queries.GetQueryInfo();
         }
@@ -54,6 +60,7 @@ namespace TableManager
                     UnitOfWork.Instance.Queries.GetSpecifiedFromDateCallback += GetFromDate;
                     UnitOfWork.Instance.Queries.GetSpecifiedTillDateCallback += GetTillDate;
                     UnitOfWork.Instance.Queries.UpdateTableHeadersHandler += UpdateTableHeaders;
+                    UnitOfWork.Instance.Queries.QueryResultHandler += FillTable; 
                     UnitOfWork.Instance.Queries.ConductQuery(int.Parse(comboBoxStatisticsType.SelectedValue.ToString()));
                 }
                 catch (NotImplementedException exc) { MessageBox.Show(exc.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
@@ -63,7 +70,7 @@ namespace TableManager
         }
 
 
-        public void UpdateTableHeaders(IEnumerable<string> headers, IEnumerable<string> bindings)
+        private void UpdateTableHeaders(IEnumerable<string> headers, IEnumerable<string> bindings)
         {
             try
             {
@@ -72,11 +79,18 @@ namespace TableManager
                 var headerParameters = headers.Zip(bindings, (h, b) => new { Header = h, Binding = b });
 
                 foreach (var p in headerParameters)
-                    gridView.Columns.Add(new GridViewColumn { Width = p.Header.Length * 12 + 20, Header = p.Header, DisplayMemberBinding = new Binding(p.Binding) });
+                    gridView.Columns.Add(new GridViewColumn { Header = p.Header, DisplayMemberBinding = new Binding(p.Binding) });
             }
             catch { throw new InvalidOperationException("Number of headers must match number of bindings"); }
 
             statsListView.ItemsSource = null;
+        }
+
+
+        private void FillTable(IEnumerable<QueryResult> content)
+        {
+            listViewContent = new ObservableCollection<QueryResult>(content);
+            statsListView.ItemsSource = listViewContent;
         }
 
 
