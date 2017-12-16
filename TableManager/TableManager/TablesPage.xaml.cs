@@ -27,6 +27,7 @@ namespace TableManager
         Order _selectedOrder;
         int _selectedTablesId = -1;
         int _waiterID = 1;
+        List<Button> tables = new List<Button>();
 
         public Action<int> CompleteOrder;
         int activeTableId;
@@ -37,7 +38,7 @@ namespace TableManager
             UnitOfWork.Instance.Tables.TableInfoHandler += CreateTablesGrid;
             CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
             CompleteOrder += TableSelectionChanged;
-
+            // on load PageContainer.AddOrderPage.PassChangedStatusIdHandler += ChangeCurrentTableColour;
             UnitOfWork.Instance.Tables.GetTableInfo();
         }
 
@@ -51,7 +52,7 @@ namespace TableManager
 
         private void buttonAddOrder_Click(object sender, RoutedEventArgs e)
         {
-            if (_selectedTablesId >0)
+            if (_selectedTablesId > 0)
                 NavigationService.Navigate(PageContainer.AddOrderPage);
         }
 
@@ -77,6 +78,29 @@ namespace TableManager
             }               
         }
 
+        private void ChangeCurrentTableColour(int tableStatusId)
+        {
+            ChangeTableColour(activeTableId, tableStatusId);
+        }
+
+        private void ChangeTableColour(int tableId, int tableStatusId)
+        {
+            foreach (var table in tables)
+            {
+                if (int.Parse(table.Tag.ToString()) == tableId)
+                {
+                    switch (tableStatusId)
+                    {
+                        case 1: table.Background = Brushes.AliceBlue; break;
+                        case 2: table.Background = Brushes.YellowGreen; break;
+                        case 3: table.Background = Brushes.LightYellow; break;
+                    }
+                    break;
+                }
+            }
+        }
+
+        
 
         private void buttonDeleteOrder_Click(object sender, RoutedEventArgs e)
         {
@@ -90,15 +114,18 @@ namespace TableManager
         }
 
 
-        public void CreateTablesGrid(int id, int numbetOfSeats, int x, int y)
+        public void CreateTablesGrid(int id, int numbetOfSeats, int statusId, int x, int y)
         {
             #region UIModification
-            Button table = new Button { Name=$"table{id}Button", Tag = id, Content = $"Table {id} \n {numbetOfSeats} Seats",
+            Button table = new Button { Name = $"table{id}Button", Tag = id,
+                Content = $"Table {id} \n {numbetOfSeats} Seats",
                 Height = 50, Width = 60,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
+                BorderThickness = new Thickness(3),
+                BorderBrush = Brushes.White
             };
 
             if (x+1 > DynamicGrid.ColumnDefinitions.Count)
@@ -117,24 +144,28 @@ namespace TableManager
                     DynamicGrid.RowDefinitions.Add(new RowDefinition());
                 }
             }
-            Grid.SetRow(table, y);
 
-            //table.Tag = id;
-            //TextBlock info = new TextBlock();
-            //info.Text = $"{id}\nNumber of seats: {numbetOfSeats}";
-            //table.Content = info;
+            Grid.SetRow(table, y);           
+            table.Click += buttonTable_Click;
+            tables.Add(table);
+            ChangeTableColour(int.Parse(table.Tag.ToString()), statusId);
             DynamicGrid.Children.Add(table);
             #endregion
-            table.Click += buttonTable_Click;           
         }
 
 
         private void buttonTable_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
+            activeTableId = (int)button.Tag;
             buttonEditOrder.IsEnabled = true;
             buttonDeleteOrder.IsEnabled = true;
             buttonCompleteOrder.IsEnabled = true;
+            foreach (var table in tables)
+            {
+                table.BorderBrush = Brushes.White;
+            }
+            button.BorderBrush = Brushes.DarkSlateBlue;
             TableSelectionChanged((int)button.Tag);
         }
 
