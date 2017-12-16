@@ -24,6 +24,8 @@ namespace TableManager
     public partial class TablesPage : Page
     {
         ObservableCollection<Order> _tablesOrdes;
+        Order _selectedOrder;
+        int _selectedTablesId = -1;
         int _waiterID = 1;
 
         public Action<int> CompleteOrder;
@@ -48,8 +50,8 @@ namespace TableManager
 
         private void buttonAddOrder_Click(object sender, RoutedEventArgs e)
         {
-            //adding order
-            NavigationService.Navigate(PageContainer.AddOrderPage);
+            if (_selectedTablesId >0)
+                NavigationService.Navigate(PageContainer.AddOrderPage);
         }
 
 
@@ -135,9 +137,14 @@ namespace TableManager
 
         private void TableSelectionChanged(int id)
         {
-            // for testing purposes all table's orders are displayed!
+            _selectedTablesId = id;
             _tablesOrdes = new ObservableCollection<Order>(UnitOfWork.Instance.Orders.GetActiveOrders(id));
             treeViewOrders.ItemsSource = _tablesOrdes;
+        }
+
+        private void treeViewOrders_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            _selectedOrder = treeViewOrders.SelectedItem as Order;
         }
     }
 }

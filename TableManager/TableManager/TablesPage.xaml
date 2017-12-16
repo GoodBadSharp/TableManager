@@ -31,7 +31,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TreeView Name="treeViewOrders"
-                Grid.Column="0" Grid.Row="1" Margin="5" Grid.ColumnSpan="4">
+                Grid.Column="0" Grid.Row="1" Margin="5" Grid.ColumnSpan="4" SelectedItemChanged="treeViewOrders_SelectedItemChanged">
                     <TreeView.Resources>
                         <HierarchicalDataTemplate DataType="{x:Type self:Order}" ItemsSource="{Binding OrderedDishes}">
                             <StackPanel Orientation="Horizontal">

@@ -23,15 +23,18 @@ namespace TableManager
     /// </summary>
     public partial class AddOrderPage : Page
     {
-        Order _order;
-        //List<DishInOrder> _dishes = new List<DishInOrder>();
-        //List<Dish> availableDishes = new List<Dish>(UnitOfWork.Instance.Orders.GetDishes());
+        Order _order = new Order();
+        List<DishInOrder> _dishes = new List<DishInOrder>();
+        ObservableCollection<Dish> availableDishes = new ObservableCollection<Dish>(UnitOfWork.Instance.Orders.GetDishes());
         ObservableCollection<Dish> displayDishes = new ObservableCollection<Dish>();
+
+
         public AddOrderPage()
         {
             InitializeComponent();
-
-            //comboBoxProducts.ItemsSource = availableDishes;
+            comboBoxProducts.ItemsSource = availableDishes;
+            comboBoxProducts.DisplayMemberPath = "Name";
+            comboBoxProducts.SelectedValuePath = "Id";
         }
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
@@ -48,9 +51,6 @@ namespace TableManager
 
         private void buttonAddDish_Click(object sender, RoutedEventArgs e)
         {
-
-            comboBoxProducts.DisplayMemberPath = "Name";
-            comboBoxProducts.SelectedValuePath = "Id";
             if (comboBoxProducts.SelectedIndex >= 0 || textBoxProductQuantity.Text != null 
                 || int.TryParse(textBoxProductQuantity.Text, out int j) || j > 0)
             {
