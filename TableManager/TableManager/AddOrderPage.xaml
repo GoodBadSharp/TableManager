@@ -28,7 +28,7 @@
                    Text="Dish" Grid.Column="0" Grid.Row="0"/>
         <TextBlock Grid.Column="2" Margin="5" TextWrapping="Wrap" 
                    Text="Quantity" Grid.Row="0"/>
-        <ListBox x:Name="dishesListBox" Grid.ColumnSpan="5" Margin="5" Grid.Row="1"/>
+        <ListBox x:Name="listBoxDishes" Grid.ColumnSpan="5" Margin="5" Grid.Row="1"/>
         <Button Name="buttonAddDish" Content="Add" Grid.Column="4" Grid.Row="0" Margin="5"
                 Click="buttonAddDish_Click"/>
         <Button Name="buttonCompleteOrder" Content="Complete" Margin="5" Grid.Column="0" Width="70"

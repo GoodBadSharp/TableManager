@@ -47,8 +47,8 @@ namespace TableManager
             PageContainer.AddOrderPage.GetCurrentTableIdCallback += GetCurrentTable;
             PageContainer.AddOrderPage.GetCurrentWaiterIdCallback += GetCurrentWaiter;
             CancelOrder += UnitOfWork.Instance.Orders.CancelOrder;
-            // on load PageContainer.AddOrderPage.PassChangedStatusIdHandler += ChangeCurrentTableColour;
-            // on load PageContainer.AddOrderPage.PassAddedOrderHandler += AddOrderToCurrentTable;
+            PageContainer.AddOrderPage.PassChangedStatusIdHandler += ChangeCurrentTableColour;
+            PageContainer.AddOrderPage.PassAddedOrderHandler += AddOrderToCurrentTable;
             UnitOfWork.Instance.Tables.GetTableInfo();
         }
 
@@ -69,7 +69,6 @@ namespace TableManager
 
         private void buttonEditOrder_Click(object sender, RoutedEventArgs e)
         {
-            //editing order
             NavigationService.Navigate(PageContainer.EditOrderPage);
         }
 

@@ -44,8 +44,8 @@ namespace TableManager
             comboBoxProducts.ItemsSource = availableDishes;
             comboBoxProducts.DisplayMemberPath = "Name";
             comboBoxProducts.SelectedValuePath = "Id";
-            dishesListBox.ItemsSource = _displayedDishes;
-            dishesListBox.DisplayMemberPath = "Name";
+            listBoxDishes.ItemsSource = _displayedDishes;
+            listBoxDishes.DisplayMemberPath = "Name";
         }
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
