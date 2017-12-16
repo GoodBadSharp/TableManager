@@ -28,6 +28,8 @@ namespace TableManager
         List<DishInOrder> dishes = new List<DishInOrder>();
         List<Dish> availableDishes = new List<Dish>(UnitOfWork.Instance.Orders.GetDishes());
         ObservableCollection<Dish> displayDishes = new ObservableCollection<Dish>();
+
+
         public AddOrderPage()
         {         
             InitializeComponent();
