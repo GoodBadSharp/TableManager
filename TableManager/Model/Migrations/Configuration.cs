@@ -26,10 +26,10 @@ namespace TableManagerData.Migrations
             //  to avoid creating duplicate seed data.
 
             //debugger for packages console
-            if (System.Diagnostics.Debugger.IsAttached == false)
-            {
-                System.Diagnostics.Debugger.Launch();
-            }
+            //if (System.Diagnostics.Debugger.IsAttached == false)
+            //{
+            //    System.Diagnostics.Debugger.Launch();
+            //}
 
             Assembly assembly = Assembly.GetExecutingAssembly();
 
