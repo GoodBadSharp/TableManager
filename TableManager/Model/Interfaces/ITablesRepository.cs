@@ -11,9 +11,9 @@ namespace TableManagerData
     {
         /// <summary>
         /// Invoked for each table instance in GetTableInfo().
-        /// Assign to get id, number of seats, X and Y coordinates of a table (order dependent)
+        /// Assign to get id, number of seats, table's status id, X and Y coordinates of a table (order dependent)
         /// </summary>
-        event Action<int, int, int, int> TableInfoHandler;
+        event Action<int, int, int, int, int> TableInfoHandler;
 
         /// <summary>
         /// Invoked in GetTableInfo(). 
