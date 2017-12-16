@@ -22,7 +22,7 @@ namespace TableManagerData
             try
             {
                 order.Status = _context.OrderStatuses.Single(os => os.Id == 1);
-                _context.SaveChanges();
+                order.OrderTime = DateTime.Today;
                 _context.Orders.Add(order);
                 _context.SaveChanges();
             }
@@ -48,8 +48,9 @@ namespace TableManagerData
 
         public IEnumerable<Order> GetActiveOrders(int tablesId)
         {
-            return _context.Orders.Include(o => o.OrderedDishes)
-                        .Where(o => o.Id == tablesId)
+            return _context.Orders.Include(o => o.OrderedDishes.Select(dio => dio.Dish))
+                        .Where(o => o.Table_Id == tablesId)
+                        .Where(o => o.Status_Id == 1)
                         .AsNoTracking();
         }
 

@@ -21,12 +21,12 @@ namespace TableManagerData.Interfaces
         event Action<IEnumerable<QueryContainer>, string, string> QueryCollectionHandler;
 
         /// <summary>
-        /// Use to pass the beginning of the time period for a query. If not specified, earliest order date will be taken
+        /// Use to pass the beginning of a time period for a query. If not specified, earliest order's date will be taken
         /// </summary>
         event Func<DateTime?> GetSpecifiedFromDateCallback;
 
         /// <summary>
-        /// Use to pass the end of the time period for a query. If not specified, latest order date will be taken
+        /// Use to pass the end of a time period for a query. If not specified, latest order's date will be taken
         /// </summary>
         event Func<DateTime?> GetSpecifiedTillDateCallback;
 

@@ -53,7 +53,7 @@ namespace TableManager
         private void buttonCompleteOrder_Click(object sender, RoutedEventArgs e)
         {
             //when all dishes are added "complete order" saves them and navigates to the main page
-            NavigationService.Navigate(new TablesPage());
+            NavigationService.Navigate(PageContainer.TablesPage);
         }
 
         private void buttonAddDish_Click(object sender, RoutedEventArgs e)

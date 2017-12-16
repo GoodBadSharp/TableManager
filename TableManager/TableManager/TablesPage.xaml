@@ -14,7 +14,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" Name="DynamicGrid">
+            <Grid Grid.Column="0" Name="DynamicGrid" Margin="10">
                 
             </Grid>
             <Grid Grid.Column="1">
