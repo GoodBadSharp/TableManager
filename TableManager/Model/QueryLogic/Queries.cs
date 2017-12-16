@@ -29,16 +29,14 @@ namespace TableManagerData
             try
             {
                 //see QueryResults for correct bindings (second collection)
-                UpdateTableHeadersHandler?.Invoke(new List<string> { "Name", "Number of Order", "Profit" }, new List<string> { "Name", "NumberOfOrders", "Profit" });
+                UpdateTableHeadersHandler?.Invoke(new List<string> { "ID", "Number of Order", "Profit" }, new List<string> { "Name", "NumberOfOrders", "Profit" });
                 switch (queryID)
                 {
                     case 1:
-                        //UpdateColumnsHandler?.Invoke(new List<string> { "ID", "Terminal's Location", "Products out of stock" }, new List<string> { "TerminalID", "Location", "ReportDetails" });
-                        //TableStats();
+                        TableStats();
                         break;
                     case 2:
-                        //UpdateColumnsHandler?.Invoke(new List<string> { "ID", "Product Name", "Sold" }, new List<string> { "ProductID", "Name", "ReportDetails" });
-                        //StaffStats();
+                        StaffStats();
                         break;
                     default:
                         throw new NotImplementedException("Query not implemented");
@@ -56,29 +54,20 @@ namespace TableManagerData
             QueryCollectionHandler?.Invoke(queryList, "QueryID", "Description");
         }
 
-        void TableStats()
+        private void TableStats()
         {
             DateTime fromDate;
             DateTime tillDate;
 
-            try
-            {
-                fromDate = GetSpecifiedFromDateCallback?.Invoke() != null ? 
-                    (DateTime)GetSpecifiedFromDateCallback.Invoke() 
-                    : _context.Orders.Min(o => o.OrderTime);
-                tillDate = GetSpecifiedTillDateCallback?.Invoke() != null ? 
-                    (DateTime)GetSpecifiedTillDateCallback.Invoke() 
-                    : _context.Orders.Max(o => o.OrderTime);
-            }
-            catch { throw new InvalidOperationException("Failed to get specified time period"); }
+            GetTimePeriod(out fromDate, out tillDate);
 
             var result = _context.Tables
                 .Select(t => new QueryResult
                 {
                     Name = t.Id.ToString(),
-                    NumberOfOrders = t.RelatedOrders.Where(ro => ro.OrderTime >= fromDate && ro.OrderTime <= tillDate).Count(),
+                    NumberOfOrders = t.RelatedOrders.Where(o => o.OrderTime >= fromDate && o.OrderTime <= tillDate && o.Status_Id == 2).Count(),
                     Profit = t.RelatedOrders
-                        .Where(o => o.OrderTime >= fromDate && o.OrderTime <= tillDate)
+                        .Where(o => o.OrderTime >= fromDate && o.OrderTime <= tillDate && o.Status_Id == 2)
                         .Select(o => new
                         {
                             ProfitPerOrder = o.OrderedDishes
@@ -88,17 +77,45 @@ namespace TableManagerData
                                 })
                                 .Sum(a => a.ProfitPerDish)
                         })
+                        .DefaultIfEmpty(new { ProfitPerOrder = Decimal.Zero })
                         .Sum(a => a.ProfitPerOrder)
                 });
 
             QueryResultHandler?.Invoke(result);
         }
 
-        void StaffStats()
+        private void StaffStats()
         {
             DateTime fromDate;
             DateTime tillDate;
 
+            GetTimePeriod(out fromDate, out tillDate);
+
+            var result = _context.Waiters
+                .Select(w => new QueryResult
+                {
+                    Name = w.Name,
+                    NumberOfOrders = w.Orders.Where(o => o.OrderTime >= fromDate && o.OrderTime <= tillDate && o.Status_Id == 2).Count(),
+                    Profit = w.Orders
+                        .Where(o => o.OrderTime >= fromDate && o.OrderTime <= tillDate && o.Status_Id == 2)
+                        .Select(o => new
+                        {
+                            ProfitPerOrder = o.OrderedDishes
+                                .Select(d => new
+                                {
+                                    ProfitPerDish = (d.Dish.Price - d.Dish.Cost) * d.Quantity
+                                })
+                                .Sum(a => a.ProfitPerDish)
+                        })
+                        .DefaultIfEmpty(new { ProfitPerOrder = Decimal.Zero })
+                        .Sum(a => a.ProfitPerOrder)
+                });
+
+            QueryResultHandler?.Invoke(result);
+        }
+
+        private void GetTimePeriod(out DateTime fromDate, out DateTime tillDate)
+        {
             try
             {
                 fromDate = GetSpecifiedFromDateCallback?.Invoke() != null ?
@@ -110,26 +127,8 @@ namespace TableManagerData
             }
             catch { throw new InvalidOperationException("Failed to get specified time period"); }
 
-            var result = _context.Waiters
-                .Select(w => new QueryResult
-                {
-                    Name = w.Name,
-                    NumberOfOrders = w.Orders.Where(ro => ro.OrderTime >= fromDate && ro.OrderTime <= tillDate).Count(),
-                    Profit = w.Orders
-                        .Where(o => o.OrderTime >= fromDate && o.OrderTime <= tillDate)
-                        .Select(o => new
-                        {
-                            ProfitPerOrder = o.OrderedDishes
-                                .Select(d => new
-                                {
-                                    ProfitPerDish = (d.Dish.Price - d.Dish.Cost) * d.Quantity
-                                })
-                                .Sum(a => a.ProfitPerDish)
-                        })
-                        .Sum(a => a.ProfitPerOrder)
-                });
-
-            QueryResultHandler?.Invoke(result);
+            if (fromDate > tillDate)
+                throw new InvalidOperationException("Specify correct time period");
         }
     }
 }
