@@ -23,13 +23,14 @@ namespace TableManager
     /// </summary>
     public partial class TablesPage : Page
     {
-        ObservableCollection<Order> _tablesOrdes;
+        ObservableCollection<Order> _tablesOrders;
         Order _selectedOrder;
         int _selectedTablesId = -1;
         int _waiterID = 1;
         List<Button> tables = new List<Button>();
 
         public Action<int> CompleteOrder;
+        public Action<int> CancelOrder;
         int activeTableId;
 
         public TablesPage()
@@ -38,17 +39,22 @@ namespace TableManager
             UnitOfWork.Instance.Tables.TableInfoHandler += CreateTablesGrid;
             CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
             CompleteOrder += TableSelectionChanged;
+            CancelOrder += UnitOfWork.Instance.Orders.CancelOrder;
             // on load PageContainer.AddOrderPage.PassChangedStatusIdHandler += ChangeCurrentTableColour;
+            // on load PageContainer.AddOrderPage.PassAddedOrderHandler += AddOrderToCurrentTable;
             UnitOfWork.Instance.Tables.GetTableInfo();
         }
 
 
-        private void buttonStatistics_Click(object sender, RoutedEventArgs e)
+        private void buttonStatistics_Click(object sender, RoutedEventArgs e)//go to statistics page
         {
-            //go to statistics page
             NavigationService.Navigate(PageContainer.StatsPage);
         }
 
+        private void AddOrderToCurrentTable(Order order)
+        {
+            _tablesOrders.Add(order);
+        }
 
         private void buttonAddOrder_Click(object sender, RoutedEventArgs e)
         {
@@ -98,13 +104,11 @@ namespace TableManager
                     break;
                 }
             }
-        }
+        }        
 
-        
-
-        private void buttonDeleteOrder_Click(object sender, RoutedEventArgs e)
+        private void buttonDeleteOrder_Click(object sender, RoutedEventArgs e)//actions taking place when order is cancelled
         {
-            //actions taking place when order is cancelled
+            CancelOrder?.Invoke(_selectedTablesId);
         }
 
 
@@ -177,8 +181,8 @@ namespace TableManager
         private void TableSelectionChanged(int id)
         {
             _selectedTablesId = id;
-            _tablesOrdes = new ObservableCollection<Order>(UnitOfWork.Instance.Orders.GetActiveOrders(id));
-            treeViewOrders.ItemsSource = _tablesOrdes;
+            _tablesOrders = new ObservableCollection<Order>(UnitOfWork.Instance.Orders.GetActiveOrders(id));
+            treeViewOrders.ItemsSource = _tablesOrders;
         }
 
         private void treeViewOrders_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
