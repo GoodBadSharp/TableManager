@@ -29,6 +29,7 @@ namespace TableManager
         int _waiterID = 1;
 
         public Action<int> CompleteOrder;
+        int activeTableId;
 
         public TablesPage()
         {
@@ -134,6 +135,10 @@ namespace TableManager
             TableSelectionChanged((int)button.Tag);
         }
 
+        public int GetActiveTable()
+        {
+            return activeTableId;
+        }
 
         private void TableSelectionChanged(int id)
         {

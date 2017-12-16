@@ -23,18 +23,27 @@ namespace TableManager
     /// </summary>
     public partial class AddOrderPage : Page
     {
+        public Func<int> GetCurrentTable;
         Order _order = new Order();
-        List<DishInOrder> _dishes = new List<DishInOrder>();
-        ObservableCollection<Dish> availableDishes = new ObservableCollection<Dish>(UnitOfWork.Instance.Orders.GetDishes());
+        List<DishInOrder> dishes = new List<DishInOrder>();
+        List<Dish> availableDishes = new List<Dish>(UnitOfWork.Instance.Orders.GetDishes());
         ObservableCollection<Dish> displayDishes = new ObservableCollection<Dish>();
 
 
         public AddOrderPage()
-        {
+        {         
             InitializeComponent();
             comboBoxProducts.ItemsSource = availableDishes;
             comboBoxProducts.DisplayMemberPath = "Name";
             comboBoxProducts.SelectedValuePath = "Id";
+
+            GetCurrentTable += PageContainer.TablesPage.GetActiveTable;
+            try
+            {
+                _order.Table_Id = GetCurrentTable.Invoke();
+            }
+            catch (Exception)
+            {throw;}           
         }
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
