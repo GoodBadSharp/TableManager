@@ -24,6 +24,7 @@ namespace TableManager
     public partial class TablesPage : Page
     {
         public Action<int> CompleteOrder;
+        int activeTableId;
 
         public TablesPage()
         {
@@ -110,7 +111,13 @@ namespace TableManager
         private void buttonTable_Click(object sender, RoutedEventArgs e)
         {
             var item = sender as Order;
+            activeTableId = int.Parse(Tag.ToString());
             TableSelectionChanged(item.Id);
+        }
+
+        public int GetActiveTable()
+        {
+            return activeTableId;
         }
 
         private void TableSelectionChanged(int id)
