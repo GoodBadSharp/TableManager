@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TableManageData;
 using TableManager;
 
 namespace TableManager
@@ -18,5 +19,13 @@ namespace TableManager
         public static EditOrderPage EditOrderPage { get { return _editOrderPage; } }
         public static TablesPage TablesPage { get { return _tablesPage; } }
         public static StatisticsPage StatsPage { get { return _statsPage; } }
+
+        public static DishInOrder AddDish(int dishId, int quantity)
+        {
+            DishInOrder dish = new DishInOrder();
+            dish.DishID = dishId;
+            dish.Quantity = quantity;
+            return dish;
+        }
     }
 }
