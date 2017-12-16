@@ -23,62 +23,82 @@ namespace TableManager
     /// </summary>
     public partial class AddOrderPage : Page
     {
-        public Func<int> GetCurrentTable;
-        Order _order = new Order();
-        List<DishInOrder> dishes = new List<DishInOrder>();
-        List<Dish> availableDishes = new List<Dish>(UnitOfWork.Instance.Orders.GetDishes());
-        ObservableCollection<Dish> displayDishes = new ObservableCollection<Dish>();
+        public event Func<int> GetCurrentTableIdCallback;
+        public event Func<int> GetCurrentWaiterIdCallback;
+        public event Action<int> PassChangedStatusIdHandler;
+        public event Action<Order> PassAddedOrderHandler;
 
+        int _currentTableId;
+        Order _order = new Order();
+        List<Dish> availableDishes = new List<Dish>(UnitOfWork.Instance.Orders.GetDishes());
+        ObservableCollection<Dish> _displayedDishes = new ObservableCollection<Dish>();
+        List<DishInOrder> _orderDishes = new List<DishInOrder>();
 
         public AddOrderPage()
         {         
-            InitializeComponent();
+            InitializeComponent();      
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
             comboBoxProducts.ItemsSource = availableDishes;
             comboBoxProducts.DisplayMemberPath = "Name";
             comboBoxProducts.SelectedValuePath = "Id";
-
-            GetCurrentTable += PageContainer.TablesPage.GetActiveTable;
-            try
-            {
-                _order.Table_Id = GetCurrentTable.Invoke();
-            }
-            catch (Exception)
-            {throw;}           
+            dishesListBox.ItemsSource = _displayedDishes;
+            dishesListBox.DisplayMemberPath = "Name";
         }
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
-            //go back to main page
+            _order = new Order();
+            _displayedDishes.Clear();
+            _orderDishes.Clear();
             NavigationService.Navigate(PageContainer.TablesPage);
         }
 
         private void buttonCompleteOrder_Click(object sender, RoutedEventArgs e)
         {
-            //when all dishes are added "complete order" saves them and navigates to the main page
+            _currentTableId = GetCurrentTableIdCallback.Invoke();
+            _order.Table_Id = _currentTableId;
+            _order.Waiter_Id = GetCurrentWaiterIdCallback.Invoke();
+            _order.OrderedDishes = _orderDishes;
+            PassAddedOrderHandler?.Invoke(_order);
+            UnitOfWork.Instance.Orders.AddOrder(_order);
+
+            _order = new Order();
+            _displayedDishes.Clear();
+            _orderDishes.Clear();
+            PassChangedStatusIdHandler?.Invoke(2);
             NavigationService.Navigate(PageContainer.TablesPage);
         }
 
         private void buttonAddDish_Click(object sender, RoutedEventArgs e)
         {
-            if (comboBoxProducts.SelectedIndex >= 0 || textBoxProductQuantity.Text != null 
-                || int.TryParse(textBoxProductQuantity.Text, out int j) || j > 0)
+            if (comboBoxProducts.SelectedValue != null
+                && textBoxProductQuantity.Text != null
+                && int.TryParse(textBoxProductQuantity.Text, out int j)
+                && j > 0)
             {
                 try
                 {
-                    var dish = PageContainer.AddDish(int.Parse(comboBoxProducts.SelectedValue.ToString()),
+                    DishInOrder dishes = PageContainer.AddDish(int.Parse(comboBoxProducts.SelectedValue.ToString()),
                         int.Parse(textBoxProductQuantity.Text));
-                    _order.OrderedDishes.Add(dish);
-                    for (int i = 1; i < int.Parse(textBoxProductQuantity.Text); i++)
+                    _orderDishes.Add(dishes);
+
+                    for (int i = 0; i < int.Parse(textBoxProductQuantity.Text); i++)
                     {
-                        displayDishes.Add(comboBoxProducts.SelectedItem as Dish);
+                        _displayedDishes.Add(comboBoxProducts.SelectedItem as Dish);
                     }
+
                 }
                 catch (InvalidOperationException ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
             }
-            else MessageBox.Show("Specify the correct input of product and quantity.");
+            else MessageBox.Show("Specify correct input for a dish and its quantity.");
         }
+
+
     }
 }

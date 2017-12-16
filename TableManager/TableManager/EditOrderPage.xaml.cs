@@ -23,48 +23,54 @@ namespace TableManager
     /// </summary>
     public partial class EditOrderPage : Page
     {
-        public Func<int> GetCurrentTable;
-        Order _order = new Order();
+        public event Func<int> GetCurrentTableIdCallback;
+        public event Func<int> GetCurrentWaiterIdCallback;
+        public event Func<Order> GetCurrentOrderCallback;
+
         List<DishInOrder> dishes = new List<DishInOrder>();
         List<Dish> availableDishes = new List<Dish>(UnitOfWork.Instance.Orders.GetDishes());
         ObservableCollection<Dish> displayDishes = new ObservableCollection<Dish>();
         public EditOrderPage()
         {
-            GetCurrentTable += PageContainer.TablesPage.GetActiveTable;
             InitializeComponent();
+            
+            //try
+            //{
+            //    _order.Table_Id = GetCurrentTable.Invoke();
+            //}
+            //catch (Exception)
+            //{ throw; }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            //GetCurrentTable += PageContainer.TablesPage.GetCurrentTable;
             comboBoxProducts.ItemsSource = availableDishes;
             comboBoxProducts.DisplayMemberPath = "Name";
             comboBoxProducts.SelectedValuePath = "Id";
-            
-            try
-            {
-                _order.Table_Id = GetCurrentTable.Invoke();
-            }
-            catch (Exception)
-            { throw; }
         }
 
         private void buttonAddDish_Click(object sender, RoutedEventArgs e)
         {
-            if (comboBoxProducts.SelectedIndex >= 0 || textBoxProductQuantity.Text != null
-                    || int.TryParse(textBoxProductQuantity.Text, out int j) || j > 0)
-            {
-                try
-                {
-                    var dish = PageContainer.AddDish(int.Parse(comboBoxProducts.SelectedValue.ToString()),
-                        int.Parse(textBoxProductQuantity.Text));
-                    _order.OrderedDishes.Add(dish);
-                    for (int i = 1; i < int.Parse(textBoxProductQuantity.Text); i++)
-                    {
-                        displayDishes.Add(comboBoxProducts.SelectedItem as Dish);
-                    }
-                }
-                catch (InvalidOperationException ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-            else MessageBox.Show("Specify the correct input of product and quantity.");
+            //if (comboBoxProducts.SelectedIndex >= 0 || textBoxProductQuantity.Text != null
+            //        || int.TryParse(textBoxProductQuantity.Text, out int j) || j > 0)
+            //{
+            //    try
+            //    {
+            //        var dish = PageContainer.AddDish(int.Parse(comboBoxProducts.SelectedValue.ToString()),
+            //            int.Parse(textBoxProductQuantity.Text));
+            //        _order.OrderedDishes.Add(dish);
+            //        for (int i = 1; i < int.Parse(textBoxProductQuantity.Text); i++)
+            //        {
+            //            displayDishes.Add(comboBoxProducts.SelectedItem as Dish);
+            //        }
+            //    }
+            //    catch (InvalidOperationException ex)
+            //    {
+            //        MessageBox.Show(ex.Message);
+            //    }
+            //}
+            //else MessageBox.Show("Specify the correct input of product and quantity.");
         }
 
         private void buttonCompleteOrder_Click(object sender, RoutedEventArgs e)
@@ -83,5 +89,6 @@ namespace TableManager
             //navigates back to the main page
             NavigationService.Navigate(PageContainer.TablesPage);
         }
+
     }
 }

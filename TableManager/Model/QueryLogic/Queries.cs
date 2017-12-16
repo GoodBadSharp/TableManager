@@ -29,7 +29,7 @@ namespace TableManagerData
             try
             {
                 //see QueryResults for correct bindings (second collection)
-                UpdateTableHeadersHandler?.Invoke(new List<string> { "ID", "Number of Order", "Profit" }, new List<string> { "Name", "NumberOfOrders", "Profit" });
+                UpdateTableHeadersHandler?.Invoke(new List<string> { "ID", "Number of Orders", "Profit" }, new List<string> { "Name", "NumberOfOrders", "Profit" });
                 switch (queryID)
                 {
                     case 1:

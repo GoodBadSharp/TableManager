@@ -20,6 +20,12 @@ namespace TableManager
         public static TablesPage TablesPage { get { return _tablesPage; } }
         public static StatisticsPage StatsPage { get { return _statsPage; } }
 
+        /// <summary>
+        /// Creates DishInOrder instance for Order object 
+        /// </summary>
+        /// <param name="dishId">Id of the dish to be added</param>
+        /// <param name="quantity">Quantity of the dish to added</param>
+        /// <returns>instance of DishInOrder</returns>
         public static DishInOrder AddDish(int dishId, int quantity)
         {
             DishInOrder dish = new DishInOrder();

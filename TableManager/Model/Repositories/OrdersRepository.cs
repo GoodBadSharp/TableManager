@@ -24,6 +24,7 @@ namespace TableManagerData
                 order.Status = _context.OrderStatuses.Single(os => os.Id == 1);
                 order.OrderTime = DateTime.Today;
                 _context.Orders.Add(order);
+                _context.Tables.Single(t => t.Id == order.Table_Id).Status = _context.TableStatuses.Single(os => os.Id == 2);
                 _context.SaveChanges();
             }
             catch

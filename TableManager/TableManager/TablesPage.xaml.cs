@@ -23,36 +23,40 @@ namespace TableManager
     /// </summary>
     public partial class TablesPage : Page
     {
-        ObservableCollection<Order> _tablesOrdes;
+        ObservableCollection<Order> _tablesOrders;
         Order _selectedOrder;
         int _selectedTablesId = -1;
         int _waiterID = 1;
 
         public Action<int> CompleteOrder;
-        int activeTableId;
 
         public TablesPage()
         {
             InitializeComponent();
+        }
+
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
             UnitOfWork.Instance.Tables.TableInfoHandler += CreateTablesGrid;
             CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
             CompleteOrder += TableSelectionChanged;
+            PageContainer.AddOrderPage.GetCurrentTableIdCallback += GetCurrentTable;
+            PageContainer.AddOrderPage.GetCurrentWaiterIdCallback += GetCurrentWaiter;
 
             UnitOfWork.Instance.Tables.GetTableInfo();
         }
 
 
-        private void buttonStatistics_Click(object sender, RoutedEventArgs e)
-        {
-            //go to statistics page
-            NavigationService.Navigate(PageContainer.StatsPage);
-        }
+        private void buttonStatistics_Click(object sender, RoutedEventArgs e)  { NavigationService.Navigate(PageContainer.StatsPage); }
 
 
         private void buttonAddOrder_Click(object sender, RoutedEventArgs e)
         {
-            if (_selectedTablesId >0)
+            if (_selectedTablesId > 0)
+            {
                 NavigationService.Navigate(PageContainer.AddOrderPage);
+            }
         }
 
 
@@ -119,10 +123,6 @@ namespace TableManager
             }
             Grid.SetRow(table, y);
 
-            //table.Tag = id;
-            //TextBlock info = new TextBlock();
-            //info.Text = $"{id}\nNumber of seats: {numbetOfSeats}";
-            //table.Content = info;
             DynamicGrid.Children.Add(table);
             #endregion
             table.Click += buttonTable_Click;           
@@ -135,16 +135,21 @@ namespace TableManager
             TableSelectionChanged((int)button.Tag);
         }
 
-        public int GetActiveTable()
+        private int GetCurrentTable()
         {
-            return activeTableId;
+            return _selectedTablesId;
+        }
+
+        private int GetCurrentWaiter()
+        {
+            return _waiterID;
         }
 
         private void TableSelectionChanged(int id)
         {
             _selectedTablesId = id;
-            _tablesOrdes = new ObservableCollection<Order>(UnitOfWork.Instance.Orders.GetActiveOrders(id));
-            treeViewOrders.ItemsSource = _tablesOrdes;
+            _tablesOrders = new ObservableCollection<Order>(UnitOfWork.Instance.Orders.GetActiveOrders(id));
+            treeViewOrders.ItemsSource = _tablesOrders;
         }
 
         private void treeViewOrders_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

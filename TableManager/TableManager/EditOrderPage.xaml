@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:TableManager"
       mc:Ignorable="d" 
       d:DesignHeight="350" d:DesignWidth="525"
-      Title="EditOrderPage">
+      Title="EditOrderPage" Loaded="Page_Loaded">
 
     <Grid>
         <Grid.RowDefinitions>

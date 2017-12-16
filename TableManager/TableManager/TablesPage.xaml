@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:TableManager"
       xmlns:self="clr-namespace:TableManageData;assembly=TableManagerData"
       mc:Ignorable="d" d:DesignWidth="525"
-      Title="TablesPage" d:DesignHeight="350" KeepAlive="True">
+      Title="TablesPage" d:DesignHeight="350" KeepAlive="True" Loaded="Page_Loaded">
 
     <Grid>
         <Grid>
@@ -40,7 +40,14 @@
                         </HierarchicalDataTemplate>
                         <DataTemplate DataType="{x:Type self:DishInOrder}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Dish.Name}" />
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} (x{1})">
+                                            <Binding Path="Dish.Name" />
+                                            <Binding Path="Quantity" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
                             </StackPanel>
                         </DataTemplate>
                     </TreeView.Resources>
