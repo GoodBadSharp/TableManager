@@ -49,9 +49,7 @@ namespace TableManagerData
                 //string valueProperty = typeof(TableStatus).GetProperties()[0].ToString();
                 //string displayProperty = typeof(TableStatus).GetProperties()[1].ToString();
                 TableStatusHandler?.Invoke(statuses, "Id", "Description");
-                _context.Tables.ToList().ForEach(t => TableInfoHandler?.
-                    Invoke(t.Id, t.NumberOfSeats, t.X, t.Y));
-                _context.SaveChanges();
+                _context.Tables.ToList().ForEach(t => TableInfoHandler?.Invoke(t.Id, t.NumberOfSeats, t.X, t.Y));
             //}
             //catch { throw new InvalidOperationException("Failed to retrieve table info"); }
         }
