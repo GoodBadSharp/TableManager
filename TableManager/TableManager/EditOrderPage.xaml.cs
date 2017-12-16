@@ -83,5 +83,10 @@ namespace TableManager
             //navigates back to the main page
             NavigationService.Navigate(PageContainer.TablesPage);
         }
+
+        private void listBoxDishes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            buttonDeleteDish.IsEnabled = true;
+        }
     }
 }

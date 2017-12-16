@@ -23,14 +23,14 @@
         </Grid.ColumnDefinitions>
         <ComboBox Name="comboBoxProducts" Grid.Column="1" Grid.Row="0" Margin="5"/>
         <TextBox Name="textBoxProductQuantity" Grid.Column="3" Grid.Row="0" Margin="5"
-                 TextWrapping="Wrap" Text="TextBox"/>
+                 TextWrapping="Wrap"/>
         <TextBlock Margin="5" TextWrapping="Wrap" 
                    Text="Dish" Grid.Column="0" Grid.Row="0"/>
         <TextBlock Grid.Column="2" Margin="5" TextWrapping="Wrap" 
                    Text="Quantity" Grid.Row="0"/>
-        <ListBox Grid.ColumnSpan="5" Margin="5" Grid.Row="1"/>
+        <ListBox Name="listBoxDishes" Grid.ColumnSpan="5" Margin="5" Grid.Row="1"/>
         <Button Name="buttonAddDish" Content="Add" Grid.Column="4" Grid.Row="0" Margin="5"
-                Click="buttonAddDish_Click" IsEnabled="False"/>
+                Click="buttonAddDish_Click"/>
         <Button Name="buttonCompleteOrder" Content="Complete" Margin="5" Grid.Column="0" Width="70"
                 Grid.Row="2" Click="buttonCompleteOrder_Click"/>
         <Button Name="buttonCancel" Content="Cancel" Margin="5" Grid.Column="1" Width="70" 

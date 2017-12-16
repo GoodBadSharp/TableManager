@@ -130,6 +130,9 @@ namespace TableManager
         private void buttonTable_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
+            buttonEditOrder.IsEnabled = true;
+            buttonDeleteOrder.IsEnabled = true;
+            buttonCompleteOrder.IsEnabled = true;
             TableSelectionChanged((int)button.Tag);
         }
 
