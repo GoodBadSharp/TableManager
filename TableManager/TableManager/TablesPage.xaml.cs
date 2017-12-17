@@ -90,7 +90,7 @@ namespace TableManager
         {
             try
             {
-                if (treeViewOrders.SelectedItem is Order)
+                if (treeViewOrders.SelectedItem is Order && _waiterID != 0)
                 {
                     Order selectedOrder = treeViewOrders.SelectedItem as Order;
                     using (var unitOfWork = new UnitOfWork())
@@ -130,7 +130,7 @@ namespace TableManager
         {
             try
             {
-                if (_selectedOrder != null)
+                if (_selectedOrder != null && _waiterID != 0)
                 {
                     var result = MessageBox.Show("Do you wish to cancel this order?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                     if (result == MessageBoxResult.Yes)
@@ -260,13 +260,16 @@ namespace TableManager
         {
             try
             {
-                using (var unitOfWork = new UnitOfWork())
-                {
-                    unitOfWork.Tables.ReserveOrCancelReservation(_selectedTablesId);
-                    unitOfWork.SaveChanges();
-                    ChangeCurrentTableColour(unitOfWork.Tables.GetTableStatusId(_selectedTablesId));
+                if (_selectedTablesId > 0 && _waiterID != 0)
+                { 
+                        using (var unitOfWork = new UnitOfWork())
+                    {
+                        unitOfWork.Tables.ReserveOrCancelReservation(_selectedTablesId);
+                        unitOfWork.SaveChanges();
+                        ChangeCurrentTableColour(unitOfWork.Tables.GetTableStatusId(_selectedTablesId));
+                    }
+                    ActiveTableChanged();
                 }
-                ActiveTableChanged();
             }
             catch (InvalidOperationException exc) { MessageBox.Show(exc.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
             catch (Exception) { MessageBox.Show("Unknown exception on reserving table", "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }

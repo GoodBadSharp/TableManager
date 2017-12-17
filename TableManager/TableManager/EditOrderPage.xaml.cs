@@ -31,7 +31,7 @@ namespace TableManager
         Order orderOld;
 
         List<Dish> availableDishes;
-        ObservableCollection<DishInOrder> _displayedDishes;
+        ObservableCollection<Dish> _displayedDishes;
         List<DishInOrder> _orderDishes = new List<DishInOrder>();
 
         public EditOrderPage()
@@ -54,12 +54,12 @@ namespace TableManager
                 tableId = currentOrder.Table_Id;
                 waiterId = currentOrder.Waiter_Id;
                 _orderDishes = currentOrder.OrderedDishes.ToList();
-                _displayedDishes = new ObservableCollection<DishInOrder>();
-                foreach (var dish in _orderDishes)
+                _displayedDishes = new ObservableCollection<Dish>();
+                foreach (var dishes in _orderDishes)
                 {
-                    for (int i = 0; i < dish.Quantity; i++)
+                    for (int i = 0; i < dishes.Quantity; i++)
                     {
-                        _displayedDishes.Add(dish);
+                        _displayedDishes.Add(dishes.Dish);
                     }
                 }
             }
@@ -100,7 +100,7 @@ namespace TableManager
                         _orderDishes.Add(dishForAdding);
                         for (int i = 0; i < dishForDisplaying.Quantity; i++)
                         {
-                            _displayedDishes.Add(dishForDisplaying);
+                            _displayedDishes.Add(dishForDisplaying.Dish);
                         }
                     }
                     else
@@ -109,7 +109,7 @@ namespace TableManager
                             += int.Parse(textBoxProductQuantity.Text);
                         for (int i = 0; i < int.Parse(textBoxProductQuantity.Text); i++)
                         {
-                            _displayedDishes.Add(dishForDisplaying);
+                            _displayedDishes.Add(dishForDisplaying.Dish);
                         }
                     }
                 }
@@ -158,9 +158,20 @@ namespace TableManager
         {
             try
             {
-                var dish = listBoxDishes.SelectedItem as DishInOrder;
-                _orderDishes.Remove(dish);
-                _displayedDishes.Remove(dish);
+                if (listBoxDishes.SelectedItem is Dish)
+                {
+                    Dish selectedDish = listBoxDishes.SelectedItem as Dish;
+                    if (_orderDishes.SingleOrDefault(dio => dio.DishID == selectedDish.Id).Quantity > 1)
+                    {
+                        _orderDishes.SingleOrDefault(dio => dio.DishID == selectedDish.Id).Quantity--;
+                        _displayedDishes.Remove(selectedDish);
+                    }
+                    else
+                    {
+                        _orderDishes.Remove(_orderDishes.SingleOrDefault(dio => dio.DishID == selectedDish.Id));
+                        _displayedDishes.Remove(selectedDish);
+                    }
+                }
             }
             catch (Exception)
             {
