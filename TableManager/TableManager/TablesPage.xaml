@@ -54,7 +54,7 @@
                 </TreeView>
                 <Button Name="buttonStatistics" Grid.Column="0" Grid.Row="0" Margin="5" 
                     Content="Show Statistics" Grid.ColumnSpan="4" Click="buttonStatistics_Click"></Button>
-                <Button Name="buttonAddOrder" Margin="5"
+                <Button Name="buttonAddOrder" Margin="5" IsEnabled="False"
                     Grid.Column="0" Grid.Row="3" Content="NEW" Click="buttonAddOrder_Click"></Button>
                 <Button Name="buttonEditOrder" Margin="5" IsEnabled="False"
                     Grid.Row="3" Grid.Column="1" Content="EDIT" Click="buttonEditOrder_Click"></Button>

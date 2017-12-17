@@ -81,9 +81,9 @@ namespace TableManager
             {
                 try
                 {
-                    DishInOrder dishes = PageContainer.AddDish(int.Parse(comboBoxProducts.SelectedValue.ToString()),
+                    DishInOrder dish = PageContainer.AddDish(int.Parse(comboBoxProducts.SelectedValue.ToString()),
                         int.Parse(textBoxProductQuantity.Text));
-                    _orderDishes.Add(dishes);
+                    _orderDishes.Add(dish);
 
                     for (int i = 0; i < int.Parse(textBoxProductQuantity.Text); i++)
                     {

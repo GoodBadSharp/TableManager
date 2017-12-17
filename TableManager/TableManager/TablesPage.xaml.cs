@@ -112,7 +112,7 @@ namespace TableManager
 
         private void buttonDeleteOrder_Click(object sender, RoutedEventArgs e)//actions taking place when order is cancelled
         {
-            CancelOrder?.Invoke(_selectedTablesId);
+            UnitOfWork.Instance.Orders.CancelOrder(_selectedOrder.Id);
         }
 
         public void CreateTablesGrid(int id, int numbetOfSeats, int statusId, int x, int y)
@@ -159,6 +159,7 @@ namespace TableManager
         {
             var button = sender as Button;
             activeTableId = (int)button.Tag;
+            buttonAddOrder.IsEnabled = true;
             buttonEditOrder.IsEnabled = true;
             buttonDeleteOrder.IsEnabled = true;
             buttonCompleteOrder.IsEnabled = true;
@@ -189,7 +190,8 @@ namespace TableManager
 
         private void treeViewOrders_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            _selectedOrder = treeViewOrders.SelectedItem as Order;
+            try { _selectedOrder = treeViewOrders.SelectedItem as Order; }
+            catch (Exception) { }
         }
     }
 }
