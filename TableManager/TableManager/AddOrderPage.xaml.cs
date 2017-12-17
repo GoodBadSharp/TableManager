@@ -86,7 +86,8 @@ namespace TableManager
                 PassChangedStatusIdHandler?.Invoke(2);
                 NavigationService.Navigate(PageContainer.TablesPage);
             }
-            else MessageBox.Show("Cannot add empty order. Add dishes or cancel order", "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            else MessageBox.Show("Cannot add empty order. Add dishes or cancel order", "Warning", 
+                MessageBoxButton.OK, MessageBoxImage.Asterisk);
         }
 
         private void buttonAddDish_Click(object sender, RoutedEventArgs e)
