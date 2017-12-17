@@ -10,6 +10,8 @@ namespace TableManagerData
 {
     internal class OrdersRepository : IOrdersRepository
     {
+        public event Action<int> UpdateTableByIdHandler;
+
         private Context _context;
 
         public OrdersRepository(Context context)
@@ -19,16 +21,18 @@ namespace TableManagerData
 
         public void AddOrder(Order order)
         {
-            try
-            {
-                order.Status = _context.OrderStatuses.Single(os => os.Id == 1);
-                order.OrderTime = DateTime.Today;
+            //try
+            //{
+                order.Status_Id = 1;
+                //_context.SaveChanges();
                 _context.Orders.Add(order);
-                _context.Tables.Single(t => t.Id == order.Table_Id).Status = _context.TableStatuses.Single(os => os.Id == 2);
+                Table relatedTable = _context.Tables.Single(t => t.Id == order.Table_Id);
+                relatedTable.Status_Id = 2;
                 _context.SaveChanges();
-            }
-            catch
-            { throw new InvalidOperationException("Failed to add the order"); }
+                UpdateTableByIdHandler?.Invoke(relatedTable.Id);
+            //}
+            //catch
+            //{ throw new InvalidOperationException("Failed to add the order"); }
         }
 
         public void UpdateOrder(Order order)
@@ -57,22 +61,34 @@ namespace TableManagerData
 
         public void OrderComplete(int orderId)
         {
-            try
-            {
-                _context.Orders.Single(o => o.Id == orderId).Status.Id = 2;
+            //try
+            //{
+                Order completedOrder = _context.Orders.Single(o => o.Id == orderId);
+                completedOrder.Status_Id = 2;
+                Table relatedTable = _context.Tables.Single(t => t.Id == completedOrder.Table_Id);
+                if (relatedTable.RelatedOrders.FirstOrDefault(o => o.Status_Id == 1) == null)
+                    _context.Tables.Single(t => t.Id == completedOrder.Table_Id).Status_Id = 1;
+
                 _context.SaveChanges();
-            }
-            catch { throw new InvalidOperationException("Failed to complete the order"); }
+                UpdateTableByIdHandler?.Invoke(relatedTable.Id);
+            //}
+            //catch { throw new InvalidOperationException("Failed to complete the order"); }
         }
 
         public void CancelOrder(int orderId)
         {
             try
             {
-                _context.Orders.Remove(_context.Orders.First(o => o.Id == orderId));
+                Order canceledOrder = _context.Orders.Single(o => o.Id == orderId);
+                _context.Orders.Remove(canceledOrder);
+                Table relatedTable = _context.Tables.Single(t => t.Id == canceledOrder.Table_Id);
+                if (relatedTable.RelatedOrders.FirstOrDefault(o => o.Status_Id == 1) == null)
+                    _context.Tables.Single(t => t.Id == canceledOrder.Table_Id).Status_Id = 1;
+
                 _context.SaveChanges();
+                UpdateTableByIdHandler?.Invoke(relatedTable.Id);
             }
-            catch { throw new InvalidOperationException("Failed to cancel the order"); }
+            catch { throw new InvalidOperationException("Failed to cancel the order. Refresh tables page"); }
         }
 
         public void GetDishInfo()

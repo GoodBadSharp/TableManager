@@ -10,7 +10,12 @@ namespace TableManagerData
     public interface IOrdersRepository
     {
         /// <summary>
-        /// 
+        /// Invoked on cancelation and completion of an order. Assign to get id of the table to be updated
+        /// </summary>
+        event Action<int> UpdateTableByIdHandler;
+
+        /// <summary>
+        /// Adds passed order to a database
         /// </summary>
         /// <param name="order">Order to be added</param>
         void AddOrder(Order order);

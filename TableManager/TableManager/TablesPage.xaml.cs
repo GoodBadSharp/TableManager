@@ -31,15 +31,13 @@ namespace TableManager
         List<TableManageData.Table> tables = new List<TableManageData.Table>();
 
         public Action<int> CompleteOrder;
-        public Action<int> CancelOrder;
-        int activeTableId;
 
         public TablesPage()
         {
             InitializeComponent();
             UnitOfWork.Instance.Tables.TableInfoHandler += CreateTablesGrid;
             CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
-            CancelOrder += UnitOfWork.Instance.Orders.CancelOrder;
+            UnitOfWork.Instance.Orders.UpdateTableByIdHandler += UpdateTable;
             UnitOfWork.Instance.Tables.GetTableInfo();
         }
 
@@ -50,15 +48,20 @@ namespace TableManager
             PageContainer.AddOrderPage.GetCurrentTableIdCallback += GetCurrentTable;
             PageContainer.AddOrderPage.GetCurrentWaiterIdCallback += GetCurrentWaiter;
             PageContainer.AddOrderPage.PassChangedStatusIdHandler += ChangeCurrentTableColour;
-            PageContainer.AddOrderPage.PassAddedOrderHandler += AddOrderToCurrentTable;            
+            PageContainer.AddOrderPage.PassTableUpdateHandler += UpdateTable;            
         }
 
 
         private void buttonStatistics_Click(object sender, RoutedEventArgs e)  { NavigationService.Navigate(PageContainer.StatsPage); }
 
-        private void AddOrderToCurrentTable(Order order)
+        private void UpdateTable(int tableId)
         {
-            _tablesOrders.Add(order);
+            _tablesOrders = new ObservableCollection<Order>(UnitOfWork.Instance.Orders.GetActiveOrders(tableId));
+            treeViewOrders.ItemsSource = _tablesOrders;
+            if (_tablesOrders.Count != 0)
+                ChangeTableColour(tableId, 2);
+            else
+                ChangeTableColour(tableId, 1);
         }
 
         private void buttonAddOrder_Click(object sender, RoutedEventArgs e)
@@ -70,27 +73,23 @@ namespace TableManager
 
         private void buttonEditOrder_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(PageContainer.EditOrderPage);
+            if (_selectedTablesId > 0 && _selectedOrder.Id > 0)
+                NavigationService.Navigate(PageContainer.EditOrderPage);
         }
 
-
-        /// <summary>
-        /// Actions taking place when order is completed (guests got all dishes and payed).
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+         
         private void buttonCompleteOrder_Click(object sender, RoutedEventArgs e)
         {
             if (treeViewOrders.SelectedItem is Order)
             {
-                var item = treeViewOrders.SelectedItem as Order;
-                CompleteOrder?.Invoke(item.Id);
-            }               
+                Order selectedOrder = treeViewOrders.SelectedItem as Order;
+                CompleteOrder?.Invoke(selectedOrder.Id);
+            }
         }
 
         private void ChangeCurrentTableColour(int tableStatusId)
         {
-            ChangeTableColour(activeTableId, tableStatusId);
+            ChangeTableColour(_selectedTablesId, tableStatusId);
         }
 
         private void ChangeTableColour(int tableId, int tableStatusId)
@@ -101,23 +100,31 @@ namespace TableManager
                 {
                     switch (tableStatusId)
                     {
-                        case 1: table.Background = Brushes.AliceBlue; break;
-                        case 2: table.Background = Brushes.YellowGreen; break;
-                        case 3: table.Background = Brushes.LightYellow; break;
+                        case 1: table.Background = Brushes.AliceBlue; break; // 1: Vacant
+                        case 2: table.Background = Brushes.YellowGreen; break; // 2: Occupied
+                        case 3: table.Background = Brushes.LightYellow; break; // 3: Reserved
                     }
                     break;
                 }
             }
         }        
 
-        private void buttonDeleteOrder_Click(object sender, RoutedEventArgs e)//actions taking place when order is cancelled
+        private void buttonDeleteOrder_Click(object sender, RoutedEventArgs e)
         {
-            CancelOrder?.Invoke(_selectedTablesId);
+            if (_selectedOrder != null)
+            {
+                var result = MessageBox.Show("Do you wish to cancel this order?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (result == MessageBoxResult.Yes)
+                {
+                    UnitOfWork.Instance.Orders.CancelOrder(_selectedOrder.Id);
+                    //UpdateTable(_selectedTablesId);
+                }
+            }
         }
 
         public void CreateTablesGrid(int id, int numbetOfSeats, int statusId, int x, int y)
         {
-            #region UIModification
+            #region UI Modification
             Button table = new Button { Name = $"table{id}Button", Tag = id,
                 Content = $"Table {id} \n {numbetOfSeats} Seats",
                 Height = 50, Width = 60,
@@ -149,7 +156,7 @@ namespace TableManager
             Grid.SetRow(table, y);           
             table.Click += buttonTable_Click;
             tablesButtons.Add(table);
-            ChangeTableColour(int.Parse(table.Tag.ToString()), statusId);
+            ChangeTableColour(id, statusId);
             DynamicGrid.Children.Add(table);
             #endregion
         }
@@ -158,7 +165,7 @@ namespace TableManager
         private void buttonTable_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            activeTableId = (int)button.Tag;
+            _selectedTablesId = (int)button.Tag;
             buttonEditOrder.IsEnabled = true;
             buttonDeleteOrder.IsEnabled = true;
             buttonCompleteOrder.IsEnabled = true;
@@ -183,8 +190,7 @@ namespace TableManager
         private void TableSelectionChanged(int id)
         {
             _selectedTablesId = id;
-            _tablesOrders = new ObservableCollection<Order>(UnitOfWork.Instance.Orders.GetActiveOrders(id));
-            treeViewOrders.ItemsSource = _tablesOrders;
+            UpdateTable(id);
         }
 
         private void treeViewOrders_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

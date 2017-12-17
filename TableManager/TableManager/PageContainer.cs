@@ -28,10 +28,10 @@ namespace TableManager
         /// <returns>instance of DishInOrder</returns>
         public static DishInOrder AddDish(int dishId, int quantity)
         {
-            DishInOrder dish = new DishInOrder();
-            dish.DishID = dishId;
-            dish.Quantity = quantity;
-            return dish;
+            DishInOrder dishInOrder = new DishInOrder();
+            dishInOrder.DishID = dishId;
+            dishInOrder.Quantity = quantity;
+            return dishInOrder;
         }
     }
 }

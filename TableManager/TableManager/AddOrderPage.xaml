@@ -22,18 +22,19 @@
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <ComboBox Name="comboBoxProducts" Grid.Column="1" Grid.Row="0" Margin="5"/>
-        <TextBox Name="textBoxProductQuantity" Grid.Column="3" Grid.Row="0" Margin="5"
+        <TextBox Name="textBoxProductQuantity" Grid.Column="3" Grid.Row="0" Margin="5,5,103,5"
                  TextWrapping="Wrap" Text="1"/>
         <TextBlock Margin="5" TextWrapping="Wrap" 
                    Text="Dish" Grid.Column="0" Grid.Row="0"/>
         <TextBlock Grid.Column="2" Margin="5" TextWrapping="Wrap" 
                    Text="Quantity" Grid.Row="0"/>
         <ListBox x:Name="listBoxDishes" Grid.ColumnSpan="5" Margin="5" Grid.Row="1"/>
-        <Button Name="buttonAddDish" Content="Add" Grid.Column="4" Grid.Row="0" Margin="5"
+        <Button Name="buttonAddDish" Content="Add" Grid.Column="3" Grid.Row="0" Margin="57,5,30,5"
                 Click="buttonAddDish_Click"/>
         <Button Name="buttonCompleteOrder" Content="Complete" Margin="5" Grid.Column="0" Width="70"
-                Grid.Row="2" Click="buttonCompleteOrder_Click"/>
+                Grid.Row="2" Click="buttonCompleteAddingOrder_Click"/>
         <Button Name="buttonCancel" Content="Cancel" Margin="5" Grid.Column="1" Width="70" 
                 HorizontalAlignment="Left" Grid.Row="2" Click="buttonCancel_Click"/>
+        <Button x:Name="buttonDeleteDish" Content="Delete Dish" Grid.Column="4" Grid.Row="0" Margin="0,5,5,5" Click="buttonDeleteDish_Click"/>
     </Grid>
 </Page>

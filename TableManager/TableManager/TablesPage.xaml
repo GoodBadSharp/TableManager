@@ -35,7 +35,14 @@
                     <TreeView.Resources>
                         <HierarchicalDataTemplate DataType="{x:Type self:Order}" ItemsSource="{Binding OrderedDishes}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Id}"/>
+                                <!--<TextBlock Text="{Binding Id}"/>-->
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}Order №{0}">
+                                            <Binding Path="Id" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
                             </StackPanel>
                         </HierarchicalDataTemplate>
                         <DataTemplate DataType="{x:Type self:DishInOrder}">
