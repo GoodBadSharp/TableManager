@@ -1,0 +1,13 @@
+﻿<Window x:Name="WaiterWindow" x:Class="TableManager.WaitersWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TableManager"
+        mc:Ignorable="d"
+        Title="Slide your card" Height="145.926" Width="276.297" WindowStartupLocation="Manual" Left="750" Top="200" WindowStyle="None">
+    <Grid x:Name="DynamicGrid">
+        <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" Text="Slide your card" VerticalAlignment="Top" RenderTransformOrigin="2.188,0.608"/>
+
+    </Grid>
+</Window>

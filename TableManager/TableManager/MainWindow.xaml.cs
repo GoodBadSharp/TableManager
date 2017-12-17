@@ -31,5 +31,10 @@ namespace TableManager
         {
             frameMain.Navigate(PageContainer.TablesPage);
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            App.Current.Shutdown();
+        }
     }
 }

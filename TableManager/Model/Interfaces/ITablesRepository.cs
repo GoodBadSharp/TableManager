@@ -46,6 +46,12 @@ namespace TableManagerData
         void ReserveOrCancelReservation(int tableId);
 
         /// <summary>
+        /// Returns untracked collection of employeed waiters
+        /// </summary>
+        /// <returns>waiter collection</returns>
+        IEnumerable<Waiter> GetWaiterInfo();
+
+        /// <summary>
         /// Gets status id of the table
         /// </summary>
         /// <param name="tableId"></param>

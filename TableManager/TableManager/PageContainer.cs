@@ -20,6 +20,7 @@ namespace TableManager
         public static TablesPage TablesPage { get { return _tablesPage; } }
         public static StatisticsPage StatsPage { get { return _statsPage; } }
 
+
         /// <summary>
         /// Creates DishInOrder instance for Order object 
         /// </summary>

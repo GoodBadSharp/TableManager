@@ -26,31 +26,30 @@ namespace TableManager
         ObservableCollection<Order> _tablesOrders;
         Order _selectedOrder;
         int _selectedTablesId = -1;
-        int _waiterID = 1;
+        int _waiterID = 0;
         List<Button> tablesButtons = new List<Button>();
-
-        //public Action<int> CompleteOrder;
-        //public Action<int> CancelOrder;
 
         public TablesPage()
         {
             InitializeComponent();
-            //CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
-            //UnitOfWork.Instance.Orders.UpdateTableByIdHandler += UpdateTable;
-            //UnitOfWork.Instance.Tables.UpdateTableByIdHandler += UpdateTable;
+
             List<TableManageData.Table> tables;
+            WaitersWindow waitersWindow;
+
             using (var unitOfWork = new UnitOfWork())
             {
+                waitersWindow = new WaitersWindow(unitOfWork.Tables.GetWaiterInfo());
                 unitOfWork.Tables.TableInfoHandler += CreateTablesGrid;
                 tables = new List<TableManageData.Table>(unitOfWork.Tables.GetTableInfo());
             }
+            waitersWindow.PassAuthorizedWaiterHandler += AuthorizeWaiter;
+            waitersWindow.Show();
             tables.ForEach(t => CreateTablesGrid(t.Id, t.NumberOfSeats, t.Status_Id, t.X, t.Y));
         }
 
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {            
-            //CompleteOrder += TableSelectionChanged;
             PageContainer.AddOrderPage.GetCurrentTableIdCallback += GetCurrentTable;
             PageContainer.AddOrderPage.GetCurrentWaiterIdCallback += GetCurrentWaiter;
             PageContainer.AddOrderPage.PassChangedStatusIdHandler += ChangeCurrentTableColour;
@@ -72,32 +71,34 @@ namespace TableManager
 
         private void buttonAddOrder_Click(object sender, RoutedEventArgs e)
         {
-            if (_selectedTablesId > 0)
+            if (_selectedTablesId > 0 && _waiterID != 0)
                 NavigationService.Navigate(PageContainer.AddOrderPage);
         }
 
 
         private void buttonEditOrder_Click(object sender, RoutedEventArgs e)
         {
-            if (_selectedTablesId > 0 && _selectedOrder.Id > 0)
+            if (_selectedTablesId > 0 && _selectedOrder != null && _waiterID != 0)
                 NavigationService.Navigate(PageContainer.EditOrderPage);
         }
 
          
         private void buttonCompleteOrder_Click(object sender, RoutedEventArgs e)
         {
-            if (treeViewOrders.SelectedItem is Order)
+            try
             {
-                Order selectedOrder = treeViewOrders.SelectedItem as Order;
-                using (var unitOfWork = new UnitOfWork())
+                if (treeViewOrders.SelectedItem is Order)
                 {
-                    //unitOfWork.Orders.UpdateTableByIdHandler += UpdateTable;
-                    unitOfWork.Orders.OrderComplete(selectedOrder.Id);
-                    unitOfWork.SaveChanges();
+                    Order selectedOrder = treeViewOrders.SelectedItem as Order;
+                    using (var unitOfWork = new UnitOfWork())
+                    {
+                        unitOfWork.Orders.OrderComplete(selectedOrder.Id);
+                        unitOfWork.SaveChanges();
+                    }
+                    UpdateTable(selectedOrder.Table_Id);
                 }
-                UpdateTable(selectedOrder.Table_Id);
-                //CompleteOrder?.Invoke(selectedOrder.Id);
             }
+            catch (InvalidOperationException exc) { MessageBox.Show(exc.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
         }
 
         private void ChangeCurrentTableColour(int tableStatusId)
@@ -124,21 +125,25 @@ namespace TableManager
 
         private void buttonDeleteOrder_Click(object sender, RoutedEventArgs e)
         {
-            if (_selectedOrder != null)
+            try
             {
-                var result = MessageBox.Show("Do you wish to cancel this order?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                if (result == MessageBoxResult.Yes)
+                if (_selectedOrder != null)
                 {
-                    Order selectedOrder = treeViewOrders.SelectedItem as Order;
-                    using (var unitOfWork = new UnitOfWork())
+                    var result = MessageBox.Show("Do you wish to cancel this order?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                    if (result == MessageBoxResult.Yes)
                     {
-                        //unitOfWork.Orders.UpdateTableByIdHandler += UpdateTable;
-                        unitOfWork.Orders.CancelOrder(selectedOrder.Id);
-                        unitOfWork.SaveChanges();
+                        Order selectedOrder = treeViewOrders.SelectedItem as Order;
+                        using (var unitOfWork = new UnitOfWork())
+                        {
+                            unitOfWork.Orders.CancelOrder(selectedOrder.Id);
+                            unitOfWork.SaveChanges();
+                        }
+                        UpdateTable(selectedOrder.Table_Id);
                     }
-                    UpdateTable(selectedOrder.Table_Id);
                 }
             }
+            catch (InvalidOperationException exc) { MessageBox.Show(exc.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
+            catch (Exception) { MessageBox.Show("Unknown exception on deleting order", "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
         }
 
         public void CreateTablesGrid(int id, int numbetOfSeats, int statusId, int x, int y)
@@ -226,6 +231,12 @@ namespace TableManager
             return _waiterID;
         }
 
+        private void AuthorizeWaiter(Waiter authWaiter)
+        {
+            _waiterID = authWaiter.Id;
+            textBlockCurrentWaiter.Text = authWaiter.Name;
+        }
+
         private void TableSelectionChanged(int id)
         {
             _selectedTablesId = id;
@@ -235,7 +246,7 @@ namespace TableManager
         private void treeViewOrders_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             try { _selectedOrder = treeViewOrders.SelectedItem as Order; }
-            catch (Exception) { }
+            catch (Exception) { MessageBox.Show("Unknown error", "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
         }
 
         private void buttonReserve_Click(object sender, RoutedEventArgs e)
@@ -250,8 +261,8 @@ namespace TableManager
                 }
                 ActiveTableChanged();
             }
-            catch (InvalidOperationException exc)
-            { MessageBox.Show(exc.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
+            catch (InvalidOperationException exc) { MessageBox.Show(exc.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
+            catch (Exception) { MessageBox.Show("Unknown exception on reserving table", "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
         }
     }
 }

@@ -11,10 +11,6 @@ namespace TableManagerData
     {
         Context _context = new Context();
 
-        //private static readonly Lazy<UnitOfWork> _lazyInstance = new Lazy<UnitOfWork>(() => new UnitOfWork());
-
-        //public static UnitOfWork Instance { get { return _lazyInstance.Value; } }
-
         public IOrdersRepository Orders { get; }
 
         public ITablesRepository Tables { get; }

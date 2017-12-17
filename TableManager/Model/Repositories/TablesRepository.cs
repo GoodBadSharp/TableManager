@@ -23,7 +23,6 @@ namespace TableManagerData
         //Defualt values written in SeedData embedded files
         //Table: Vacant 1, Occupied 2, Reserved 3
         //Order: Active 1, Completed 2
-
         public void ReserveOrCancelReservation(int tableId)
         {
             Table table;
@@ -33,16 +32,12 @@ namespace TableManagerData
                 if (table.Status_Id == 1)
                 {
                     ChangeStatus(table.Id, 3);
-                    //_context.SaveChanges();
-                    //UpdateTableByIdHandler(tableId);
                 }
                 else
                 {
                     if (table.Status_Id == 3)
                     {
                         ChangeStatus(tableId, 1);
-                        //_context.SaveChanges();
-                        //UpdateTableByIdHandler(tableId);
                     }
                     else
                     {
@@ -58,10 +53,7 @@ namespace TableManagerData
             {
                 return _context.Tables.Single(t => t.Id == tableId).Status_Id;
             }
-            catch (Exception)
-            {
-                throw new Exception("Table doesn't exist");
-            }
+            catch { throw new InvalidOperationException("Table wasn't found"); }
         }
         
         public void ChangeStatus(int tableId, int statusId)
@@ -73,7 +65,6 @@ namespace TableManagerData
                 if (table.RelatedOrders == null)
                 {
                     table.Status = _context.TableStatuses.SingleOrDefault(s => s.Id == statusId);
-                    //_context.SaveChanges();
                 }
                 else
                 {
@@ -82,7 +73,6 @@ namespace TableManagerData
                     else
                     {
                         table.Status = _context.TableStatuses.SingleOrDefault(s => s.Id == statusId);
-                        //_context.SaveChanges();
                     }
                 }
             }
@@ -90,19 +80,14 @@ namespace TableManagerData
             { throw new InvalidOperationException("Failed to change status"); }
         }
 
+        public IEnumerable<Waiter> GetWaiterInfo()
+        {
+            return _context.Waiters.AsNoTracking();
+        }
 
         public IEnumerable<Table> GetTableInfo()
         {
-            //try
-            //{
-            //var statuses = _context.TableStatuses.AsNoTracking();
-            //string valueProperty = typeof(TableStatus).GetProperties()[0].ToString();
-            //string displayProperty = typeof(TableStatus).GetProperties()[1].ToString();
-            //TableStatusHandler?.Invoke(statuses, "Id", "Description");
-            return _context.Tables.AsNoTracking().ToList();
-                    //.ForEach(t => TableInfoHandler?.Invoke(t.Id, t.NumberOfSeats, t.Status_Id, t.X, t.Y));
-            //}
-            //catch { throw new InvalidOperationException("Failed to retrieve table info"); }
+            return _context.Tables.AsNoTracking();
         }
     }
 }

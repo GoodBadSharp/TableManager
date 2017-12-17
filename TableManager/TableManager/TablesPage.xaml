@@ -14,8 +14,8 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" Name="DynamicGrid" Margin="10">
-                
+            <Grid Grid.Column="0" Name="DynamicGrid" Margin="10,10,10,31">
+
             </Grid>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
@@ -65,16 +65,18 @@
                 <Button Name="buttonStatistics" Grid.Column="0" Grid.Row="1" Margin="5" 
                     Content="Show Statistics" Grid.ColumnSpan="4" Click="buttonStatistics_Click"></Button>
                 <Button Name="buttonAddOrder" Margin="5" IsEnabled="False"
-                    Grid.Column="0" Grid.Row="4" Content="NEW" Click="buttonAddOrder_Click"></Button>
+                    Grid.Column="0" Grid.Row="4" Content=" New " Click="buttonAddOrder_Click"></Button>
                 <Button Name="buttonEditOrder" Margin="5" IsEnabled="False"
-                    Grid.Row="4" Grid.Column="1" Content="EDIT" Click="buttonEditOrder_Click"></Button>
+                    Grid.Row="4" Grid.Column="1" Content=" Edit " Click="buttonEditOrder_Click"></Button>
                 <Button Name="buttonCompleteOrder" Margin="5" IsEnabled="False"
-                    Grid.Row="4" Grid.Column="2" Content="DONE" Click="buttonCompleteOrder_Click" ></Button>
+                    Grid.Row="4" Grid.Column="2" Content=" Done " Click="buttonCompleteOrder_Click" ></Button>
                 <Button Name="buttonDeleteOrder" Margin="5" IsEnabled="False"
-                    Grid.Row="4" Grid.Column="3" Content="DELETE" Click="buttonDeleteOrder_Click"></Button>
+                    Grid.Row="4" Grid.Column="3" Content=" Delete " Click="buttonDeleteOrder_Click"></Button>
                 <TextBlock Grid.ColumnSpan="4" Grid.Column="0" Margin="5" Grid.Row="3" 
                        TextWrapping="Wrap" Text="Total:"/>
             </Grid>
+            <TextBlock HorizontalAlignment="Left" Margin="10,0,0,7" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="85" Text="Current waiter: "/>
+            <TextBlock x:Name="textBlockCurrentWaiter" HorizontalAlignment="Left" Margin="95,0,0,7" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="161"/>
         </Grid>
     </Grid>
 </Page>
