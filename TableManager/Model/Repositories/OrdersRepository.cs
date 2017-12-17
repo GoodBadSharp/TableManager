@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TableManageData;
@@ -29,22 +30,25 @@ namespace TableManagerData
             Table relatedTable = _context.Tables.Single(t => t.Id == order.Table_Id);
             relatedTable.Status_Id = 2;
             _context.Entry(order).State = EntityState.Added;
+            _context.SaveChanges();
             //UpdateTableByIdHandler?.Invoke(relatedTable.Id);
             //}
             //catch
             //{ throw new InvalidOperationException("Failed to add the order"); }
         }
 
-        public void UpdateOrder(Order order)
+        public void UpdateOrder(Order orderNew, Order orderOld)
         {
-            if (_context.Orders.Single(o => o.Id == order.Id) != null)
+            if (_context.Orders.Single(o => o.Id == orderOld.Id) != null)
             {
-                _context.Entry(order).State = EntityState.Modified;
-                
-                //_context.SaveChanges();
+                CancelOrder(orderOld.Id);
+                _context.SaveChanges();
+                AddOrder(orderNew);
+                _context.SaveChanges();
             }
             else
-                throw new InvalidOperationException("Cannot update the order because it wasn't found in the database. Refresh application");
+                throw new InvalidOperationException
+                    ("Cannot update the order because it wasn't found in the database. Refresh application");
         }
 
         public IEnumerable<Dish> GetDishes()

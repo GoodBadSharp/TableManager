@@ -24,7 +24,7 @@ namespace TableManagerData
         /// Submits update to an existing order
         /// </summary>
         /// <param name="order">Updated order</param>
-        void UpdateOrder(Order order);
+        void UpdateOrder(Order orderNew, Order orderOld);
 
         /// <summary>
         /// Gets information about available dishes from a database

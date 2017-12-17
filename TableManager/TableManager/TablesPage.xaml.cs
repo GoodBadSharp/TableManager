@@ -54,8 +54,9 @@ namespace TableManager
             PageContainer.AddOrderPage.GetCurrentTableIdCallback += GetCurrentTable;
             PageContainer.AddOrderPage.GetCurrentWaiterIdCallback += GetCurrentWaiter;
             PageContainer.AddOrderPage.PassChangedStatusIdHandler += ChangeCurrentTableColour;
-            PageContainer.AddOrderPage.PassTableUpdateHandler += UpdateTable; 
+            PageContainer.AddOrderPage.PassTableUpdateHandler += UpdateTable;
 
+            PageContainer.EditOrderPage.PassTableUpdateHandler += UpdateTable;
             PageContainer.EditOrderPage.GetCurrentOrderCallback += GetCurrentOrder;
         }
 
@@ -81,7 +82,7 @@ namespace TableManager
 
         private void buttonEditOrder_Click(object sender, RoutedEventArgs e)
         {
-            if (_selectedTablesId > 0 && _selectedOrder.Id > 0)
+            if (_selectedTablesId > 0 && _selectedOrder != null)
                 NavigationService.Navigate(PageContainer.EditOrderPage);
         }
 

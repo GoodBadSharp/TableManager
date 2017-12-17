@@ -28,6 +28,7 @@ namespace TableManager
         int tableId;
         int waiterId;
         Order currentOrder;
+        Order orderOld;
 
         List<Dish> availableDishes;
         ObservableCollection<DishInOrder> _displayedDishes;
@@ -49,6 +50,7 @@ namespace TableManager
             try
             {
                 currentOrder = GetCurrentOrderCallback.Invoke();
+                orderOld = GetCurrentOrderCallback.Invoke();
                 tableId = currentOrder.Table_Id;
                 waiterId = currentOrder.Waiter_Id;
                 _orderDishes = currentOrder.OrderedDishes.ToList();
@@ -83,26 +85,37 @@ namespace TableManager
                     Dish selectedDish = availableDishes.SingleOrDefault
                         (d => d.Id == int.Parse(comboBoxProducts.SelectedValue.ToString()));
                     var dishForAdding = new DishInOrder();
-                    dishForAdding.Dish = selectedDish;
-                    dishForAdding.Order = currentOrder;
+                    var dishForDisplaying = new DishInOrder();
+
+                    //dishForAdding.Dish = selectedDish;
+                    //dishForAdding.Order = currentOrder;
                     dishForAdding.Quantity = int.Parse(textBoxProductQuantity.Text);
                     dishForAdding.DishID = selectedDish.Id;
                     dishForAdding.OrderID = currentOrder.Id;
 
+                    dishForDisplaying.Dish = selectedDish;
+                    dishForDisplaying.Order = currentOrder;
+                    dishForDisplaying.Quantity = int.Parse(textBoxProductQuantity.Text);
+                    //dishForDisplaying.DishID = selectedDish.Id;
+                    //dishForDisplaying.OrderID = currentOrder.Id;
+
+
+
                     if (_orderDishes.SingleOrDefault(od => od.DishID == selectedDish.Id) == null)
                     {
                         _orderDishes.Add(dishForAdding);
-                        for (int i = 0; i < dishForAdding.Quantity; i++)
+                        for (int i = 0; i < dishForDisplaying.Quantity; i++)
                         {
-                            _displayedDishes.Add(dishForAdding);
+                            _displayedDishes.Add(dishForDisplaying);
                         }
                     }
                     else
                     {
-                        _orderDishes.SingleOrDefault(od => od.DishID == selectedDish.Id).Quantity += int.Parse(textBoxProductQuantity.Text);
+                        _orderDishes.SingleOrDefault(od => od.DishID == selectedDish.Id).Quantity 
+                            += int.Parse(textBoxProductQuantity.Text);
                         for (int i = 0; i < int.Parse(textBoxProductQuantity.Text); i++)
                         {
-                            _displayedDishes.Add(dishForAdding);
+                            _displayedDishes.Add(dishForDisplaying);
                         }
                     }
                 }
@@ -120,9 +133,20 @@ namespace TableManager
             {
                 currentOrder.OrderedDishes = _orderDishes;
                 currentOrder.OrderTime = DateTime.Today;
-                PassTableUpdateHandler?.Invoke(currentOrder.Table_Id);
-                //UnitOfWork.Instance.Orders.UpdateOrder(currentOrder);
+                //PassTableUpdateHandler?.Invoke(currentOrder.Table_Id);
 
+                foreach (var item in currentOrder.OrderedDishes)
+                {
+                    item.Dish = null;
+                }
+
+                using (var unitOfWork = new UnitOfWork())
+                {
+                    unitOfWork.Orders.UpdateOrder(currentOrder, orderOld);
+                    unitOfWork.SaveChanges();
+                }
+
+                PassTableUpdateHandler?.Invoke(currentOrder.Table_Id);
                 currentOrder = null;
                 _displayedDishes.Clear();
                 _orderDishes.Clear();
