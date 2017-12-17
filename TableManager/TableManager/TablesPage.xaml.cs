@@ -46,10 +46,12 @@ namespace TableManager
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {            
             CompleteOrder += TableSelectionChanged;
-            PageContainer.AddOrderPage.GetCurrentTableIdCallback += GetCurrentTable;
+            PageContainer.AddOrderPage.GetCurrentTableIdCallback += GetCurrentTable;           
             PageContainer.AddOrderPage.GetCurrentWaiterIdCallback += GetCurrentWaiter;
             PageContainer.AddOrderPage.PassChangedStatusIdHandler += ChangeCurrentTableColour;
-            PageContainer.AddOrderPage.PassTableUpdateHandler += UpdateTable;            
+            PageContainer.AddOrderPage.PassTableUpdateHandler += UpdateTable; 
+
+            PageContainer.EditOrderPage.GetCurrentOrderCallback += GetCurrentOrder;
         }
 
 
@@ -198,6 +200,10 @@ namespace TableManager
         private int GetCurrentWaiter()
         {
             return _waiterID;
+        }
+        private Order GetCurrentOrder()
+        {
+            return _selectedOrder;
         }
 
         private void TableSelectionChanged(int id)
