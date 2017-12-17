@@ -27,7 +27,8 @@ namespace TableManager
         Order _selectedOrder;
         int _selectedTablesId = -1;
         int _waiterID = 1;
-        List<Button> tables = new List<Button>();
+        List<Button> tablesButtons = new List<Button>();
+        List<TableManageData.Table> tables = new List<TableManageData.Table>();
 
         public Action<int> CompleteOrder;
         public Action<int> CancelOrder;
@@ -36,20 +37,20 @@ namespace TableManager
         public TablesPage()
         {
             InitializeComponent();
+            UnitOfWork.Instance.Tables.TableInfoHandler += CreateTablesGrid;
+            UnitOfWork.Instance.Tables.GetTableInfo();
         }
 
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            UnitOfWork.Instance.Tables.TableInfoHandler += CreateTablesGrid;
+        {            
             CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
             CompleteOrder += TableSelectionChanged;
             PageContainer.AddOrderPage.GetCurrentTableIdCallback += GetCurrentTable;
             PageContainer.AddOrderPage.GetCurrentWaiterIdCallback += GetCurrentWaiter;
             CancelOrder += UnitOfWork.Instance.Orders.CancelOrder;
             PageContainer.AddOrderPage.PassChangedStatusIdHandler += ChangeCurrentTableColour;
-            PageContainer.AddOrderPage.PassAddedOrderHandler += AddOrderToCurrentTable;
-            UnitOfWork.Instance.Tables.GetTableInfo();
+            PageContainer.AddOrderPage.PassAddedOrderHandler += AddOrderToCurrentTable;            
         }
 
 
@@ -94,7 +95,7 @@ namespace TableManager
 
         private void ChangeTableColour(int tableId, int tableStatusId)
         {
-            foreach (var table in tables)
+            foreach (var table in tablesButtons)
             {
                 if (int.Parse(table.Tag.ToString()) == tableId)
                 {
@@ -113,13 +114,6 @@ namespace TableManager
         {
             CancelOrder?.Invoke(_selectedTablesId);
         }
-
-
-        private void RefreshOrdersList(List<Order> orders)
-        {
-            //treeViewOrders.ItemsSource = orders;
-        }
-
 
         public void CreateTablesGrid(int id, int numbetOfSeats, int statusId, int x, int y)
         {
@@ -154,7 +148,7 @@ namespace TableManager
 
             Grid.SetRow(table, y);           
             table.Click += buttonTable_Click;
-            tables.Add(table);
+            tablesButtons.Add(table);
             ChangeTableColour(int.Parse(table.Tag.ToString()), statusId);
             DynamicGrid.Children.Add(table);
             #endregion
@@ -168,7 +162,7 @@ namespace TableManager
             buttonEditOrder.IsEnabled = true;
             buttonDeleteOrder.IsEnabled = true;
             buttonCompleteOrder.IsEnabled = true;
-            foreach (var table in tables)
+            foreach (var table in tablesButtons)
             {
                 table.BorderBrush = Brushes.White;
             }
