@@ -44,6 +44,6 @@ namespace TableManagerData.Interfaces
         /// <summary>
         /// Use to get a collection of available statistics queries. Get them through invoked QueryCollectionHandler
         /// </summary>
-        void GetQueryInfo();
+        IEnumerable<QueryContainer> GetQueryInfo();
     }
 }

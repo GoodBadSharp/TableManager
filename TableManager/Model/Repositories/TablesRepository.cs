@@ -33,7 +33,7 @@ namespace TableManagerData
                 if (table.Status_Id == 1)
                 {
                     ChangeStatus(table.Id, 3);
-                    _context.SaveChanges();
+                    //_context.SaveChanges();
                     //UpdateTableByIdHandler(tableId);
                 }
                 else
@@ -41,7 +41,7 @@ namespace TableManagerData
                     if (table.Status_Id == 3)
                     {
                         ChangeStatus(tableId, 1);
-                        _context.SaveChanges();
+                        //_context.SaveChanges();
                         //UpdateTableByIdHandler(tableId);
                     }
                     else
@@ -73,7 +73,7 @@ namespace TableManagerData
                 if (table.RelatedOrders == null)
                 {
                     table.Status = _context.TableStatuses.SingleOrDefault(s => s.Id == statusId);
-                    _context.SaveChanges();
+                    //_context.SaveChanges();
                 }
                 else
                 {
@@ -82,7 +82,7 @@ namespace TableManagerData
                     else
                     {
                         table.Status = _context.TableStatuses.SingleOrDefault(s => s.Id == statusId);
-                        _context.SaveChanges();
+                        //_context.SaveChanges();
                     }
                 }
             }
@@ -91,16 +91,16 @@ namespace TableManagerData
         }
 
 
-        public void GetTableInfo()
+        public IEnumerable<Table> GetTableInfo()
         {
             //try
             //{
-                var statuses = _context.TableStatuses.AsNoTracking();
-                //string valueProperty = typeof(TableStatus).GetProperties()[0].ToString();
-                //string displayProperty = typeof(TableStatus).GetProperties()[1].ToString();
-                TableStatusHandler?.Invoke(statuses, "Id", "Description");
-                _context.Tables.ToList()
-                    .ForEach(t => TableInfoHandler?.Invoke(t.Id, t.NumberOfSeats, t.Status_Id, t.X, t.Y));
+            //var statuses = _context.TableStatuses.AsNoTracking();
+            //string valueProperty = typeof(TableStatus).GetProperties()[0].ToString();
+            //string displayProperty = typeof(TableStatus).GetProperties()[1].ToString();
+            //TableStatusHandler?.Invoke(statuses, "Id", "Description");
+            return _context.Tables.AsNoTracking().ToList();
+                    //.ForEach(t => TableInfoHandler?.Invoke(t.Id, t.NumberOfSeats, t.Status_Id, t.X, t.Y));
             //}
             //catch { throw new InvalidOperationException("Failed to retrieve table info"); }
         }

@@ -29,13 +29,18 @@ namespace TableManager
         int waiterId;
         Order currentOrder;
 
-        List<Dish> availableDishes = new List<Dish>(UnitOfWork.Instance.Orders.GetDishes());
+        List<Dish> availableDishes;
         ObservableCollection<DishInOrder> _displayedDishes;
         List<DishInOrder> _orderDishes = new List<DishInOrder>();
 
         public EditOrderPage()
         {
             InitializeComponent();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                availableDishes = new List<Dish>(unitOfWork.Orders.GetDishes());
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

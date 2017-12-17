@@ -29,24 +29,29 @@ namespace TableManager
         int _waiterID = 1;
         List<Button> tablesButtons = new List<Button>();
 
-        public Action<int> CompleteOrder;
-        public Action<int> CancelOrder;
+        //public Action<int> CompleteOrder;
+        //public Action<int> CancelOrder;
 
         public TablesPage()
         {
             InitializeComponent();
-            UnitOfWork.Instance.Tables.TableInfoHandler += CreateTablesGrid;
-            CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
-            UnitOfWork.Instance.Orders.UpdateTableByIdHandler += UpdateTable;
-            UnitOfWork.Instance.Tables.UpdateTableByIdHandler += UpdateTable;
-            UnitOfWork.Instance.Tables.GetTableInfo();
+            //CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
+            //UnitOfWork.Instance.Orders.UpdateTableByIdHandler += UpdateTable;
+            //UnitOfWork.Instance.Tables.UpdateTableByIdHandler += UpdateTable;
+            List<TableManageData.Table> tables;
+            using (var unitOfWork = new UnitOfWork())
+            {
+                unitOfWork.Tables.TableInfoHandler += CreateTablesGrid;
+                tables = new List<TableManageData.Table>(unitOfWork.Tables.GetTableInfo());
+            }
+            tables.ForEach(t => CreateTablesGrid(t.Id, t.NumberOfSeats, t.Status_Id, t.X, t.Y));
         }
 
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {            
-            CompleteOrder += TableSelectionChanged;
-            PageContainer.AddOrderPage.GetCurrentTableIdCallback += GetCurrentTable;           
+            //CompleteOrder += TableSelectionChanged;
+            PageContainer.AddOrderPage.GetCurrentTableIdCallback += GetCurrentTable;
             PageContainer.AddOrderPage.GetCurrentWaiterIdCallback += GetCurrentWaiter;
             PageContainer.AddOrderPage.PassChangedStatusIdHandler += ChangeCurrentTableColour;
             PageContainer.AddOrderPage.PassTableUpdateHandler += UpdateTable; 
@@ -57,11 +62,14 @@ namespace TableManager
 
         private void buttonStatistics_Click(object sender, RoutedEventArgs e)  { NavigationService.Navigate(PageContainer.StatsPage); }
 
-        private void UpdateTable(int tableId)
+        public void UpdateTable(int tableId)
         {
-            _tablesOrders = new ObservableCollection<Order>(UnitOfWork.Instance.Orders.GetActiveOrders(tableId));
-            treeViewOrders.ItemsSource = _tablesOrders;
-            ChangeTableColour(tableId, UnitOfWork.Instance.Tables.GetTableStatusId(_selectedTablesId));
+            using (var unitOfWork = new UnitOfWork())
+            {
+                _tablesOrders = new ObservableCollection<Order>(unitOfWork.Orders.GetActiveOrders(tableId));
+                treeViewOrders.ItemsSource = _tablesOrders;
+                ChangeTableColour(tableId, unitOfWork.Tables.GetTableStatusId(tableId));
+            }
         }
 
         private void buttonAddOrder_Click(object sender, RoutedEventArgs e)
@@ -83,7 +91,14 @@ namespace TableManager
             if (treeViewOrders.SelectedItem is Order)
             {
                 Order selectedOrder = treeViewOrders.SelectedItem as Order;
-                CompleteOrder?.Invoke(selectedOrder.Id);
+                using (var unitOfWork = new UnitOfWork())
+                {
+                    //unitOfWork.Orders.UpdateTableByIdHandler += UpdateTable;
+                    unitOfWork.Orders.OrderComplete(selectedOrder.Id);
+                    unitOfWork.SaveChanges();
+                }
+                UpdateTable(selectedOrder.Table_Id);
+                //CompleteOrder?.Invoke(selectedOrder.Id);
             }
         }
 
@@ -116,8 +131,14 @@ namespace TableManager
                 var result = MessageBox.Show("Do you wish to cancel this order?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result == MessageBoxResult.Yes)
                 {
-                    UnitOfWork.Instance.Orders.CancelOrder(_selectedOrder.Id);
-                    //UpdateTable(_selectedTablesId);
+                    Order selectedOrder = treeViewOrders.SelectedItem as Order;
+                    using (var unitOfWork = new UnitOfWork())
+                    {
+                        //unitOfWork.Orders.UpdateTableByIdHandler += UpdateTable;
+                        unitOfWork.Orders.CancelOrder(selectedOrder.Id);
+                        unitOfWork.SaveChanges();
+                    }
+                    UpdateTable(selectedOrder.Table_Id);
                 }
             }
         }
@@ -163,21 +184,26 @@ namespace TableManager
 
         private void ActiveTableChanged()
         {
+            int _selectedTablesStatusId;
             TableSelectionChanged(_selectedTablesId);
-            if (UnitOfWork.Instance.Tables.GetTableStatusId(_selectedTablesId) != 3)
+            using (var unitOfWork = new UnitOfWork())
             {
-                buttonAddOrder.IsEnabled = true;
-                buttonEditOrder.IsEnabled = true;
-                buttonDeleteOrder.IsEnabled = true;
-                buttonCompleteOrder.IsEnabled = true;
+                _selectedTablesStatusId = unitOfWork.Tables.GetTableStatusId(_selectedTablesId);
             }
-            else
-            {
-                buttonAddOrder.IsEnabled = false;
-                buttonEditOrder.IsEnabled = false;
-                buttonDeleteOrder.IsEnabled = false;
-                buttonCompleteOrder.IsEnabled = false;
-            }
+                if (_selectedTablesStatusId != 3)
+                {
+                    buttonAddOrder.IsEnabled = true;
+                    buttonEditOrder.IsEnabled = true;
+                    buttonDeleteOrder.IsEnabled = true;
+                    buttonCompleteOrder.IsEnabled = true;
+                }
+                else
+                {
+                    buttonAddOrder.IsEnabled = false;
+                    buttonEditOrder.IsEnabled = false;
+                    buttonDeleteOrder.IsEnabled = false;
+                    buttonCompleteOrder.IsEnabled = false;
+                }
             foreach (var table in tablesButtons)
             {
                 if ((int)table.Tag == _selectedTablesId) table.BorderBrush = Brushes.DarkSlateBlue;
@@ -222,9 +248,12 @@ namespace TableManager
         {
             try
             {
-                UnitOfWork.Instance.Tables.ReserveOrCancelReservation(_selectedTablesId);
-                var res = UnitOfWork.Instance.Tables.GetTableStatusId(_selectedTablesId);
-                ChangeCurrentTableColour(UnitOfWork.Instance.Tables.GetTableStatusId(_selectedTablesId));
+                using (var unitOfWork = new UnitOfWork())
+                {
+                    unitOfWork.Tables.ReserveOrCancelReservation(_selectedTablesId);
+                    unitOfWork.SaveChanges();
+                    ChangeCurrentTableColour(unitOfWork.Tables.GetTableStatusId(_selectedTablesId));
+                }
                 ActiveTableChanged();
             }
             catch (InvalidOperationException exc)

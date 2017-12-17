@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TableManageData;
 using TableManagerData.Model;
 
 namespace TableManagerData
@@ -36,7 +37,7 @@ namespace TableManagerData
         /// <summary>
         /// Call for get all table related infromation. Invokes TableInfoHandler and TableStatusHandler
         /// </summary>
-        void GetTableInfo();
+        IEnumerable<Table> GetTableInfo();
 
         /// <summary>
         /// Reserves a table or cancel its reservation if it's already reserved

@@ -27,13 +27,19 @@ namespace TableManager
         public StatisticsPage()
         {
             InitializeComponent();
-            UnitOfWork.Instance.Queries.QueryCollectionHandler += UpdateStatsComboBox;
-            UnitOfWork.Instance.Queries.GetSpecifiedFromDateCallback += GetFromDate;
-            UnitOfWork.Instance.Queries.GetSpecifiedTillDateCallback += GetTillDate;
-            UnitOfWork.Instance.Queries.UpdateTableHeadersHandler += UpdateTableHeaders;
-            UnitOfWork.Instance.Queries.QueryResultHandler += FillTable;
+            using (var unitOfWork = new UnitOfWork())
+            {
+                comboBoxStatisticsType.ItemsSource = unitOfWork.Queries.GetQueryInfo();
+            }
+            comboBoxStatisticsType.SelectedValuePath = "QueryID";
+            comboBoxStatisticsType.DisplayMemberPath = "Description";
+            //UnitOfWork.Instance.Queries.QueryCollectionHandler += UpdateStatsComboBox;
+            //UnitOfWork.Instance.Queries.GetSpecifiedFromDateCallback += GetFromDate;
+            //UnitOfWork.Instance.Queries.GetSpecifiedTillDateCallback += GetTillDate;
+            //UnitOfWork.Instance.Queries.UpdateTableHeadersHandler += UpdateTableHeaders;
+            //UnitOfWork.Instance.Queries.QueryResultHandler += FillTable;
 
-            UnitOfWork.Instance.Queries.GetQueryInfo();
+            //UnitOfWork.Instance.Queries.GetQueryInfo();
         }
 
 
@@ -57,11 +63,14 @@ namespace TableManager
             {
                 try
                 {
-                    UnitOfWork.Instance.Queries.GetSpecifiedFromDateCallback += GetFromDate;
-                    UnitOfWork.Instance.Queries.GetSpecifiedTillDateCallback += GetTillDate;
-                    UnitOfWork.Instance.Queries.UpdateTableHeadersHandler += UpdateTableHeaders;
-                    UnitOfWork.Instance.Queries.QueryResultHandler += FillTable; 
-                    UnitOfWork.Instance.Queries.ConductQuery(int.Parse(comboBoxStatisticsType.SelectedValue.ToString()));
+                    using (var unitOfWork = new UnitOfWork())
+                    {
+                        unitOfWork.Queries.GetSpecifiedFromDateCallback += GetFromDate;
+                        unitOfWork.Queries.GetSpecifiedTillDateCallback += GetTillDate;
+                        unitOfWork.Queries.UpdateTableHeadersHandler += UpdateTableHeaders;
+                        unitOfWork.Queries.QueryResultHandler += FillTable;
+                        unitOfWork.Queries.ConductQuery(int.Parse(comboBoxStatisticsType.SelectedValue.ToString()));
+                    }
                 }
                 catch (NotImplementedException exc) { MessageBox.Show(exc.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
                 catch (InvalidOperationException exc) { MessageBox.Show(exc.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }

@@ -46,12 +46,13 @@ namespace TableManagerData
             { throw new InvalidOperationException("Failed to conduct query"); }
         }
 
-        public void GetQueryInfo()
+        public IEnumerable<QueryContainer> GetQueryInfo()
         {
             List <QueryContainer> queryList = new List<QueryContainer>();
             queryList.Add(new QueryContainer(1, "Table Statistics"));
             queryList.Add(new QueryContainer(2, "Staff Statistics"));
-            QueryCollectionHandler?.Invoke(queryList, "QueryID", "Description");
+            return queryList;
+            //QueryCollectionHandler?.Invoke(queryList, "QueryID", "Description");
         }
 
         private void TableStats()

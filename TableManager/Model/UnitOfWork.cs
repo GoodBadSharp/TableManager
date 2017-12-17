@@ -7,13 +7,13 @@ using TableManagerData.Interfaces;
 
 namespace TableManagerData
 {
-    public sealed class UnitOfWork
+    public sealed class UnitOfWork : IDisposable
     {
-        Context _context;
+        Context _context = new Context();
 
-        private static readonly Lazy<UnitOfWork> _lazyInstance = new Lazy<UnitOfWork>(() => new UnitOfWork());
+        //private static readonly Lazy<UnitOfWork> _lazyInstance = new Lazy<UnitOfWork>(() => new UnitOfWork());
 
-        public static UnitOfWork Instance { get { return _lazyInstance.Value; } }
+        //public static UnitOfWork Instance { get { return _lazyInstance.Value; } }
 
         public IOrdersRepository Orders { get; }
 
@@ -23,10 +23,14 @@ namespace TableManagerData
 
         public UnitOfWork()
         {
-            _context = new Context();
             Orders = new OrdersRepository(_context);
             Tables = new TablesRepository(_context);
             Queries = new Queries(_context);
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
 
         public void SaveChanges()
