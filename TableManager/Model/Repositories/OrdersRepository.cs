@@ -69,7 +69,7 @@ namespace TableManagerData
         {
             try
             {
-                _context.Orders.Remove(_context.Orders.First(o => o.Id == orderId));
+                _context.Orders.Remove(_context.Orders.Single(o => o.Id == orderId));
                 _context.SaveChanges();
             }
             catch { throw new InvalidOperationException("Failed to cancel the order"); }

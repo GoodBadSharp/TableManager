@@ -28,11 +28,9 @@ namespace TableManager
         int _selectedTablesId = -1;
         int _waiterID = 1;
         List<Button> tablesButtons = new List<Button>();
-        List<TableManageData.Table> tables = new List<TableManageData.Table>();
 
         public Action<int> CompleteOrder;
         public Action<int> CancelOrder;
-        int activeTableId;
 
         public TablesPage()
         {
@@ -90,7 +88,7 @@ namespace TableManager
 
         private void ChangeCurrentTableColour(int tableStatusId)
         {
-            ChangeTableColour(activeTableId, tableStatusId);
+            ChangeTableColour(_selectedTablesId, tableStatusId);
         }
 
         private void ChangeTableColour(int tableId, int tableStatusId)
@@ -154,21 +152,35 @@ namespace TableManager
             #endregion
         }
 
+        private void ActiveTableChanged()
+        {
+            TableSelectionChanged(_selectedTablesId);
+            if (UnitOfWork.Instance.Tables.GetTableStatusId(_selectedTablesId) != 3)
+            {
+                buttonAddOrder.IsEnabled = true;
+                buttonEditOrder.IsEnabled = true;
+                buttonDeleteOrder.IsEnabled = true;
+                buttonCompleteOrder.IsEnabled = true;
+            }
+            else
+            {
+                buttonAddOrder.IsEnabled = false;
+                buttonEditOrder.IsEnabled = false;
+                buttonDeleteOrder.IsEnabled = false;
+                buttonCompleteOrder.IsEnabled = false;
+            }
+            foreach (var table in tablesButtons)
+            {
+                if ((int)table.Tag == _selectedTablesId) table.BorderBrush = Brushes.DarkSlateBlue;
+                else table.BorderBrush = Brushes.White;
+            }
+        }
 
         private void buttonTable_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            activeTableId = (int)button.Tag;
-            buttonAddOrder.IsEnabled = true;
-            buttonEditOrder.IsEnabled = true;
-            buttonDeleteOrder.IsEnabled = true;
-            buttonCompleteOrder.IsEnabled = true;
-            foreach (var table in tablesButtons)
-            {
-                table.BorderBrush = Brushes.White;
-            }
-            button.BorderBrush = Brushes.DarkSlateBlue;
-            TableSelectionChanged((int)button.Tag);
+            _selectedTablesId = (int)button.Tag;
+            ActiveTableChanged();
         }
 
         private int GetCurrentTable()
@@ -192,6 +204,14 @@ namespace TableManager
         {
             try { _selectedOrder = treeViewOrders.SelectedItem as Order; }
             catch (Exception) { }
+        }
+
+        private void buttonReserve_Click(object sender, RoutedEventArgs e)
+        {
+            UnitOfWork.Instance.Tables.ReserveOrCancelReservation(_selectedTablesId);
+            var res = UnitOfWork.Instance.Tables.GetTableStatusId(_selectedTablesId);
+            ChangeCurrentTableColour(UnitOfWork.Instance.Tables.GetTableStatusId(_selectedTablesId));
+            ActiveTableChanged();
         }
     }
 }
