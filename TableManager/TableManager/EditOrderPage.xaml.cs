@@ -27,8 +27,9 @@ namespace TableManager
         public event Func<int> GetCurrentWaiterIdCallback;
         public event Func<Order> GetCurrentOrderCallback;
 
-        List<DishInOrder> dishes = new List<DishInOrder>();
         List<Dish> availableDishes = new List<Dish>(UnitOfWork.Instance.Orders.GetDishes());
+        ObservableCollection<Dish> _displayedDishes = new ObservableCollection<Dish>();
+        List<DishInOrder> _orderDishes = new List<DishInOrder>();
         ObservableCollection<Dish> displayDishes = new ObservableCollection<Dish>();
         public EditOrderPage()
         {
@@ -52,25 +53,28 @@ namespace TableManager
 
         private void buttonAddDish_Click(object sender, RoutedEventArgs e)
         {
-            //if (comboBoxProducts.SelectedIndex >= 0 || textBoxProductQuantity.Text != null
-            //        || int.TryParse(textBoxProductQuantity.Text, out int j) || j > 0)
-            //{
-            //    try
-            //    {
-            //        var dish = PageContainer.AddDish(int.Parse(comboBoxProducts.SelectedValue.ToString()),
-            //            int.Parse(textBoxProductQuantity.Text));
-            //        _order.OrderedDishes.Add(dish);
-            //        for (int i = 1; i < int.Parse(textBoxProductQuantity.Text); i++)
-            //        {
-            //            displayDishes.Add(comboBoxProducts.SelectedItem as Dish);
-            //        }
-            //    }
-            //    catch (InvalidOperationException ex)
-            //    {
-            //        MessageBox.Show(ex.Message);
-            //    }
-            //}
-            //else MessageBox.Show("Specify the correct input of product and quantity.");
+            if (comboBoxProducts.SelectedValue != null
+                && textBoxProductQuantity.Text != null
+                && int.TryParse(textBoxProductQuantity.Text, out int j)
+                && j > 0)
+            {
+                try
+                {
+                    DishInOrder dish = PageContainer.AddDish(int.Parse(comboBoxProducts.SelectedValue.ToString()),
+                        int.Parse(textBoxProductQuantity.Text));
+                    _orderDishes.Add(dish);
+
+                    for (int i = 0; i < int.Parse(textBoxProductQuantity.Text); i++)
+                    {
+                        _displayedDishes.Add(comboBoxProducts.SelectedItem as Dish);
+                    }
+
+                }
+                catch (InvalidOperationException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         private void buttonCompleteOrder_Click(object sender, RoutedEventArgs e)

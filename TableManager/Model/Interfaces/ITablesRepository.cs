@@ -32,5 +32,18 @@ namespace TableManagerData
         /// Call for get all table related infromation. Invokes TableInfoHandler and TableStatusHandler
         /// </summary>
         void GetTableInfo();
+
+        /// <summary>
+        /// Reserves a table or cancel its reservation if it's already reserved
+        /// </summary>
+        /// <param name="tableId"></param>
+        void ReserveOrCancelReservation(int tableId);
+
+        /// <summary>
+        /// Gets status id of the table
+        /// </summary>
+        /// <param name="tableId"></param>
+        /// <returns></returns>
+        int GetTableStatusId(int tableId);
     }
 }

@@ -26,12 +26,13 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TreeView Name="treeViewOrders"
-                Grid.Column="0" Grid.Row="1" Margin="5" Grid.ColumnSpan="4" SelectedItemChanged="treeViewOrders_SelectedItemChanged">
+                Grid.Column="0" Grid.Row="2" Margin="5" Grid.ColumnSpan="4" SelectedItemChanged="treeViewOrders_SelectedItemChanged">
                     <TreeView.Resources>
                         <HierarchicalDataTemplate DataType="{x:Type self:Order}" ItemsSource="{Binding OrderedDishes}">
                             <StackPanel Orientation="Horizontal">
@@ -59,17 +60,19 @@
                         </DataTemplate>
                     </TreeView.Resources>
                 </TreeView>
-                <Button Name="buttonStatistics" Grid.Column="0" Grid.Row="0" Margin="5" 
+                <Button Name="buttonReserve" Grid.Column="0" Grid.Row="0" Margin="5" 
+                    Content="Reserve / Cancel reservation" Grid.ColumnSpan="4" Click="buttonReserve_Click"></Button>
+                <Button Name="buttonStatistics" Grid.Column="0" Grid.Row="1" Margin="5" 
                     Content="Show Statistics" Grid.ColumnSpan="4" Click="buttonStatistics_Click"></Button>
-                <Button Name="buttonAddOrder" Margin="5"
-                    Grid.Column="0" Grid.Row="3" Content="NEW" Click="buttonAddOrder_Click"></Button>
+                <Button Name="buttonAddOrder" Margin="5" IsEnabled="False"
+                    Grid.Column="0" Grid.Row="4" Content="NEW" Click="buttonAddOrder_Click"></Button>
                 <Button Name="buttonEditOrder" Margin="5" IsEnabled="False"
-                    Grid.Row="3" Grid.Column="1" Content="EDIT" Click="buttonEditOrder_Click"></Button>
+                    Grid.Row="4" Grid.Column="1" Content="EDIT" Click="buttonEditOrder_Click"></Button>
                 <Button Name="buttonCompleteOrder" Margin="5" IsEnabled="False"
-                    Grid.Row="3" Grid.Column="2" Content="DONE" Click="buttonCompleteOrder_Click" ></Button>
+                    Grid.Row="4" Grid.Column="2" Content="DONE" Click="buttonCompleteOrder_Click" ></Button>
                 <Button Name="buttonDeleteOrder" Margin="5" IsEnabled="False"
-                    Grid.Row="3" Grid.Column="3" Content="DELETE" Click="buttonDeleteOrder_Click"></Button>
-                <TextBlock Grid.ColumnSpan="4" Grid.Column="0" Margin="5" Grid.Row="2" 
+                    Grid.Row="4" Grid.Column="3" Content="DELETE" Click="buttonDeleteOrder_Click"></Button>
+                <TextBlock Grid.ColumnSpan="4" Grid.Column="0" Margin="5" Grid.Row="3" 
                        TextWrapping="Wrap" Text="Total:"/>
             </Grid>
         </Grid>
