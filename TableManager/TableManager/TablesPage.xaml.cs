@@ -38,17 +38,17 @@ namespace TableManager
         {
             InitializeComponent();
             UnitOfWork.Instance.Tables.TableInfoHandler += CreateTablesGrid;
+            CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
+            CancelOrder += UnitOfWork.Instance.Orders.CancelOrder;
             UnitOfWork.Instance.Tables.GetTableInfo();
         }
 
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {            
-            CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
             CompleteOrder += TableSelectionChanged;
             PageContainer.AddOrderPage.GetCurrentTableIdCallback += GetCurrentTable;
             PageContainer.AddOrderPage.GetCurrentWaiterIdCallback += GetCurrentWaiter;
-            CancelOrder += UnitOfWork.Instance.Orders.CancelOrder;
             PageContainer.AddOrderPage.PassChangedStatusIdHandler += ChangeCurrentTableColour;
             PageContainer.AddOrderPage.PassAddedOrderHandler += AddOrderToCurrentTable;            
         }
