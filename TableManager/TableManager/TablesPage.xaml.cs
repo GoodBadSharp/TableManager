@@ -38,6 +38,7 @@ namespace TableManager
             UnitOfWork.Instance.Tables.TableInfoHandler += CreateTablesGrid;
             CompleteOrder += UnitOfWork.Instance.Orders.OrderComplete;
             UnitOfWork.Instance.Orders.UpdateTableByIdHandler += UpdateTable;
+            UnitOfWork.Instance.Tables.UpdateTableByIdHandler += UpdateTable;
             UnitOfWork.Instance.Tables.GetTableInfo();
         }
 
@@ -58,10 +59,7 @@ namespace TableManager
         {
             _tablesOrders = new ObservableCollection<Order>(UnitOfWork.Instance.Orders.GetActiveOrders(tableId));
             treeViewOrders.ItemsSource = _tablesOrders;
-            if (_tablesOrders.Count != 0)
-                ChangeTableColour(tableId, 2);
-            else
-                ChangeTableColour(tableId, 1);
+            ChangeTableColour(tableId, UnitOfWork.Instance.Tables.GetTableStatusId(_selectedTablesId));
         }
 
         private void buttonAddOrder_Click(object sender, RoutedEventArgs e)
@@ -216,10 +214,15 @@ namespace TableManager
 
         private void buttonReserve_Click(object sender, RoutedEventArgs e)
         {
-            UnitOfWork.Instance.Tables.ReserveOrCancelReservation(_selectedTablesId);
-            var res = UnitOfWork.Instance.Tables.GetTableStatusId(_selectedTablesId);
-            ChangeCurrentTableColour(UnitOfWork.Instance.Tables.GetTableStatusId(_selectedTablesId));
-            ActiveTableChanged();
+            try
+            {
+                UnitOfWork.Instance.Tables.ReserveOrCancelReservation(_selectedTablesId);
+                var res = UnitOfWork.Instance.Tables.GetTableStatusId(_selectedTablesId);
+                ChangeCurrentTableColour(UnitOfWork.Instance.Tables.GetTableStatusId(_selectedTablesId));
+                ActiveTableChanged();
+            }
+            catch (InvalidOperationException exc)
+            { MessageBox.Show(exc.Message, "Warning", MessageBoxButton.OK, MessageBoxImage.Asterisk); }
         }
     }
 }

@@ -10,6 +10,7 @@ namespace TableManagerData
     {
         public event Action<int, int, int, int, int> TableInfoHandler;
         public event Action<IEnumerable<TableStatus>, string, string> TableStatusHandler;
+        public event Action<int> UpdateTableByIdHandler;
 
         private Context _context;
 
@@ -33,6 +34,7 @@ namespace TableManagerData
                 {
                     ChangeStatus(table.Id, 3);
                     _context.SaveChanges();
+                    //UpdateTableByIdHandler(tableId);
                 }
                 else
                 {
@@ -40,10 +42,12 @@ namespace TableManagerData
                     {
                         ChangeStatus(tableId, 1);
                         _context.SaveChanges();
+                        //UpdateTableByIdHandler(tableId);
                     }
-                    else {
-                        throw new InvalidOperationException(
-                            "There are active orders at the table right now. Can't change status"); }
+                    else
+                    {
+                        throw new InvalidOperationException("There are active orders at the table right now. Can't change status");
+                    }
                 }
             }
         }
