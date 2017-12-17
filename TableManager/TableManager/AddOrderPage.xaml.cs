@@ -30,13 +30,18 @@ namespace TableManager
 
         int _currentTableId;
         Order _order = new Order();
-        List<Dish> availableDishes = new List<Dish>(UnitOfWork.Instance.Orders.GetDishes());
+
+        List<Dish> availableDishes;
         ObservableCollection<Dish> _displayedDishes = new ObservableCollection<Dish>();
         List<DishInOrder> _orderDishes = new List<DishInOrder>();
 
         public AddOrderPage()
         {         
-            InitializeComponent();      
+            InitializeComponent();
+            using (var unitOfWork = new UnitOfWork())
+            {
+                availableDishes = new List<Dish>(unitOfWork.Orders.GetDishes());
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -66,8 +71,14 @@ namespace TableManager
                 _order.Waiter_Id = GetCurrentWaiterIdCallback.Invoke();
                 _order.OrderedDishes = _orderDishes;
                 _order.OrderTime = DateTime.Today;
+                //PassTableUpdateHandler?.Invoke(_order.Table_Id);
+                using (var unitOfWork = new UnitOfWork())
+                {
+                    //unitOfWork.Orders.UpdateTableByIdHandler += PageContainer.TablesPage.UpdateTable;
+                    unitOfWork.Orders.AddOrder(_order);
+                    unitOfWork.SaveChanges();
+                }
                 PassTableUpdateHandler?.Invoke(_order.Table_Id);
-                UnitOfWork.Instance.Orders.AddOrder(_order);
 
                 _order = null;
                 _displayedDishes.Clear();

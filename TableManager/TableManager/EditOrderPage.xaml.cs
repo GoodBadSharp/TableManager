@@ -27,20 +27,18 @@ namespace TableManager
         public event Func<int> GetCurrentWaiterIdCallback;
         public event Func<Order> GetCurrentOrderCallback;
 
-        List<Dish> availableDishes = new List<Dish>(UnitOfWork.Instance.Orders.GetDishes());
+        List<Dish> availableDishes;
         ObservableCollection<Dish> _displayedDishes = new ObservableCollection<Dish>();
         List<DishInOrder> _orderDishes = new List<DishInOrder>();
         ObservableCollection<Dish> displayDishes = new ObservableCollection<Dish>();
         public EditOrderPage()
         {
             InitializeComponent();
-            
-            //try
-            //{
-            //    _order.Table_Id = GetCurrentTable.Invoke();
-            //}
-            //catch (Exception)
-            //{ throw; }
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                availableDishes = new List<Dish>(unitOfWork.Orders.GetDishes());
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
