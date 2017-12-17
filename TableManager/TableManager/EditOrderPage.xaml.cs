@@ -87,8 +87,6 @@ namespace TableManager
                     var dishForAdding = new DishInOrder();
                     var dishForDisplaying = new DishInOrder();
 
-                    //dishForAdding.Dish = selectedDish;
-                    //dishForAdding.Order = currentOrder;
                     dishForAdding.Quantity = int.Parse(textBoxProductQuantity.Text);
                     dishForAdding.DishID = selectedDish.Id;
                     dishForAdding.OrderID = currentOrder.Id;
@@ -96,10 +94,6 @@ namespace TableManager
                     dishForDisplaying.Dish = selectedDish;
                     dishForDisplaying.Order = currentOrder;
                     dishForDisplaying.Quantity = int.Parse(textBoxProductQuantity.Text);
-                    //dishForDisplaying.DishID = selectedDish.Id;
-                    //dishForDisplaying.OrderID = currentOrder.Id;
-
-
 
                     if (_orderDishes.SingleOrDefault(od => od.DishID == selectedDish.Id) == null)
                     {
@@ -131,26 +125,30 @@ namespace TableManager
         {           
             if (_orderDishes.Count > 0)
             {
-                currentOrder.OrderedDishes = _orderDishes;
-                currentOrder.OrderTime = DateTime.Today;
-                //PassTableUpdateHandler?.Invoke(currentOrder.Table_Id);
-
-                foreach (var item in currentOrder.OrderedDishes)
+                try
                 {
-                    item.Dish = null;
-                }
+                    currentOrder.OrderedDishes = _orderDishes;
+                    currentOrder.OrderTime = DateTime.Today;
 
-                using (var unitOfWork = new UnitOfWork())
-                {
-                    unitOfWork.Orders.UpdateOrder(currentOrder, orderOld);
-                    unitOfWork.SaveChanges();
-                }
+                    foreach (var item in currentOrder.OrderedDishes)
+                    {
+                        item.Dish = null;
+                    }
 
-                PassTableUpdateHandler?.Invoke(currentOrder.Table_Id);
-                currentOrder = null;
-                _displayedDishes.Clear();
-                _orderDishes.Clear();
-                NavigationService.Navigate(PageContainer.TablesPage);
+                    using (var unitOfWork = new UnitOfWork())
+                    {
+                        unitOfWork.Orders.UpdateOrder(currentOrder, orderOld);
+                        unitOfWork.SaveChanges();
+                    }
+
+                    PassTableUpdateHandler?.Invoke(currentOrder.Table_Id);
+                    currentOrder = null;
+                    _displayedDishes.Clear();
+                    _orderDishes.Clear();
+                    NavigationService.Navigate(PageContainer.TablesPage);
+                }
+                catch (Exception) { MessageBox.Show("Unknown exception on completing order", "Warning", 
+                    MessageBoxButton.OK, MessageBoxImage.Asterisk); }
             }
             else MessageBox.Show("Cannot add empty order. Add dishes or cancel order", "Warning", 
                 MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -158,9 +156,17 @@ namespace TableManager
 
         private void buttonDeleteDish_Click(object sender, RoutedEventArgs e) //deleting dish
         {
-            var dish = listBoxDishes.SelectedItem as DishInOrder;
-            _orderDishes.Remove(dish);
-            _displayedDishes.Remove(dish);
+            try
+            {
+                var dish = listBoxDishes.SelectedItem as DishInOrder;
+                _orderDishes.Remove(dish);
+                _displayedDishes.Remove(dish);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Unknown exception on completing order", "Warning",
+                    MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
         }
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e) //navigates back to the main page
